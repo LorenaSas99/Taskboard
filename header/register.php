@@ -7,39 +7,15 @@
 		$last_name = $_POST['Last_Name'];
 		$password = $_POST['Password'];
 		$email= $_POST['Email'];
-		$skill = $_POST['Skill'];
-		$skill_level = $_POST['SkillLevel'];
 		$work_hours = $_POST['WorkingHours'];
-		$role= $_POST['Role'];
+		$role= "Operator";
 
-		$skill_id = 0;
-		$skill_level_id = 0;
 		$work_hours_id = 0;
 
 		$connection = mysqli_connect($db_hostname, $db_username, $db_password);
 		if(!$connection) {
 			echo"Database Connection Error...".mysqli_connect_error();
 		} else {
-			$sql="SELECT * FROM Taskboard.Skills WHERE skill='$skill'";
-			$retval = mysqli_query( $connection, $sql );
-			if(! $retval ) {
-				echo"Error access in table Skills".mysqli_error($connection);
-			}
-			if (mysqli_num_rows($retval) == 1) {
-				while($row = mysqli_fetch_assoc($retval)) {
-					$skill_id=$row["id"];
-				}
-			}
-			$sql="SELECT * FROM Taskboard.SkillLevel WHERE skill_level='$skill_level'";
-			$retval = mysqli_query( $connection, $sql );
-			if(! $retval ) {
-				echo"Error access in table SkillLevel".mysqli_error($connection);
-			}
-			if (mysqli_num_rows($retval) == 1) {
-				while($row = mysqli_fetch_assoc($retval)) {
-					$skill_level_id=$row["id"];
-				}
-			}
 			$sql="SELECT * FROM Taskboard.WorkingHours WHERE hour='$work_hours'";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
@@ -57,8 +33,8 @@
 				echo"Error access in table TeamMembers2: ".mysqli_error($connection);
 			}
 			if (mysqli_num_rows($retval) == 0) {
-				$sql= "INSERT INTO Taskboard.TeamMembers (first_name,last_name,email,password,skill,skill_level,work_hours,role) ".
-				"VALUES ('$first_name','$last_name','$email','$password',$skill_id,$skill_level_id,$work_hours_id,'$role')";
+				$sql= "INSERT INTO Taskboard.TeamMembers (first_name,last_name,email,password,work_hours,role) ".
+				"VALUES ('$first_name','$last_name','$email','$password',$work_hours_id,'$role')";
 				$retval= mysqli_query($connection, $sql);
 				if(!$retval ) {
 					echo "Error access in table TeamMembers: ".mysqli_error($connection);
@@ -170,39 +146,6 @@
       				</div>
 				</div>
 			</div>
-			<!-- Skill -->
-			<div class="form-group">
-				<div class="input-group">
-					<div class="input-group-prepend">
-          				<span class="input-group-text" id="confirmpasswordPrepend" style="width: 9em;"><i class="fa fa-cogs"> Skill</i></span>
-        			</div>
-					<select class="form-control" name="Skill">
-						<option>C</option>
-						<option>C++</option>
-						<option>Java</option>
-					</select>
-				</div>
-			</div>
-			<!-- Nivel Skill -->
-			<div class="form-group">
-				<div class="input-group">
-					<div class="input-group-prepend">
-          				<span class="input-group-text" id="confirmpasswordPrepend" style="width: 9em;"><i class="fa fa-arrow-up"> Skill Level</i></span>
-        			</div>
-					<select class="form-control" name="SkillLevel">
-						<option>Level 1</option>
-						<option>Level 2</option>
-						<option>Level 3</option>
-						<option>Level 4</option>
-						<option>Level 5</option>
-						<option>Level 6</option>
-						<option>Level 7</option>
-						<option>Level 8</option>
-						<option>Level 9</option>
-						<option>Level 10</option>
-					</select>
-				</div>
-			</div>
 			<!-- Working Hours -->
 			<div class="form-group">
 				<div class="input-group">
@@ -216,17 +159,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="form-group">
-				<div class="input-group">
-					<div class="input-group-prepend">
-          				<span class="input-group-text" style="width: 9em;"><i class="fa fa-clock-o"> Role </i></span>
-        			</div>
-					<select class="form-control" name="Role">
-						<option>Operator</option>
-						<option>Admin</option>
-					</select>
-				</div>
-			</div>
+			
 			<div class="form-group">
 				<button type="submit" class="btn btn-primary login-btn btn-block">Sign Up</button>
 			</div>

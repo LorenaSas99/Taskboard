@@ -27,6 +27,7 @@
 		<div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
 			<ul class="nav navbar-nav navbar-right ml-auto">
 				<li><a href="" class="dropdown-item" onclick="logout()"><i class="fa fa-power-off"></i> Logout</a></li>
+				<li><a href="" class="dropdown-item" onclick="GoToSettings()"><i class="fa fa-cog"></i> Settings</a></li>
 			</ul>
 		</div>
 	</nav>

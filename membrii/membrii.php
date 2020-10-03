@@ -71,26 +71,11 @@
 								$retval = mysqli_query( $connection, $sql );
 								$users = [];
 								while($row = mysqli_fetch_assoc($retval)) {
+									$id=$row["id"];
 									$first_name = $row["first_name"];
 									$last_name = $row["last_name"];
 									$work_hours = $row["work_hours"];
-									$skill_id = $row["skill"];
-									$skill_level_id = $row["skill_level"];
 									$role= $row["role"];
-
-									$sql="SELECT * FROM $database.Skills WHERE id=$skill_id";
-									$retval1 = mysqli_query( $connection, $sql );
-									$skill = "";
-									while($row1 = mysqli_fetch_assoc($retval1)){
-										$skill = $row1["skill"];
-									}
-
-									$sql = "SELECT * FROM $database.SkillLevel WHERE id=$skill_level_id";
-									$retval1 = mysqli_query( $connection, $sql );
-									$skill_level="";
-									while($row1 = mysqli_fetch_assoc($retval1)){
-										$skill_level = $row1["skill_level"];
-									}
 
 									$sql = "SELECT * FROM $database.WorkingHours WHERE id=$work_hours";
 									$retval1 = mysqli_query( $connection, $sql );
@@ -109,14 +94,32 @@
 													"<span class=\"badge badge-pill badge-warning\">$hours_short</span>".
 												'</a>'.
 												'<div class="sidebar-submenu">'.
-													'<ul>'.
-														'<li>'.
-															"<a href=\"#\">Skill: <span style=\"float: none; font-size: 1em;\" class=\"badge badge-pill badge-info\">$skill</span></a>".
-														'</li>'.
-														'<li>'.
-															"<a href=\"#\">Level: <span style=\"float: none; font-size: 1em;\" class=\"badge badge-pill badge-info\">$skill_level</span></a>".
-														'</li>'.
-														'<li>'.
+													'<ul>';
+													$sql = "SELECT * FROM $database.UserSkills WHERE userid=$id";
+													$retval2 = mysqli_query( $connection, $sql );
+													while($row2 = mysqli_fetch_assoc($retval2)){
+														$skill_id =$row2["skill_id"];
+														$skill_level_id=$row2["skill_level"];
+														$sql="SELECT * FROM $database.Skills WHERE id=$skill_id ";
+														$retval2=mysqli_query( $connection, $sql );
+														$skill_name="";
+														while($row3 = mysqli_fetch_assoc($retval2)){
+															$skill_name=$row3["skill"];
+														}
+														$sql="SELECT * FROM $database.SkillLevel WHERE id=$skill_level_id ";
+														$retval2=mysqli_query( $connection, $sql );
+														$skill_level="";
+														while($row3 = mysqli_fetch_assoc($retval2)){
+															$skill_level=$row3["skill_level"];
+														}
+														 
+														echo '<li>'.
+															"<a href=\"#\">$skill_name: <span style=\"float: none; font-size: 1em;\" class=\"badge badge-pill badge-info\">$skill_level</span></a>".
+														'</li>';
+														
+													}
+													
+													echo '<li>'.
 															"<a href=\"#\">Working hours: <span style=\"float: none; font-size: 1em;\" class=\"badge badge-pill badge-warning\">$hours</span></a>".
 														'</li>'.
 													'</ul>'.

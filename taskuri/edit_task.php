@@ -182,9 +182,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 							}
 							}
 						?>
-						<option>C</option>
-						<option>C++</option>
-						<option>Java</option>
+					<?php
+							$connection = mysqli_connect($db_hostname, $db_username, $db_password);
+							if(!$connection) {
+								echo "Database Connection Error...".mysqli_connect_error();
+							} else {
+								$sql="SELECT * FROM $database.Skills";
+								$retval = mysqli_query( $connection, $sql );
+								while($row = mysqli_fetch_assoc($retval)) {
+									$skill_name=$row["skill"];
+									echo "<option>$skill_name</option>";
+								}
+								mysqli_close($connection);
+							}
+						?>
 					</select>
 				</div>
 			</div>

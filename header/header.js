@@ -21,3 +21,6 @@ function register() {
 function logout() {
     window.top.location.replace('http://localhost/taskboard/header/logout.php');
 }
+function GoToSettings(){
+    window.top.location.replace('http://localhost/taskboard/header/settings.php');
+}

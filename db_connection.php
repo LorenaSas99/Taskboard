@@ -33,15 +33,6 @@
 				if(! $retval ) {
 					echo "".mysqli_connect_error();
 				}
-				$count = mysqli_num_rows($retval);
-				if($count == 0) {
-					$sql = "INSERT INTO $database.Skills (skill) VALUES ('C')";
-					mysqli_query( $connection, $sql );
-					$sql = "INSERT INTO $database.Skills (skill) VALUES ('C++')";
-					mysqli_query( $connection, $sql );
-					$sql = "INSERT INTO $database.Skills (skill) VALUES ('Java')";
-					mysqli_query( $connection, $sql );
-				}
 			}
 
 			$sql = "CREATE Table IF NOT EXISTS $database.WorkingHours (".
@@ -110,6 +101,18 @@
 					}
 				}
 			}
+			$sql = "CREATE Table IF NOT EXISTS $database.UserSkills (".
+				"id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,".
+				"userid INT NOT NULL,".
+				"skill_id INT NOT NULL,".
+				"skill_level INT NOT NULL,".
+				"CONSTRAINT fk_user_id FOREIGN KEY (userid) REFERENCES TeamMembers(id),".
+				"CONSTRAINT fk_skill_id FOREIGN KEY (skill_id) REFERENCES Skills(id),".
+				"CONSTRAINT fk_skill_level FOREIGN KEY (skill_level) REFERENCES SkillLevel(id))";
+			$retval = mysqli_query( $connection, $sql );
+			if(! $retval ) {
+				echo"Could not create table UserSkills".mysqli_error($connection);
+			}
 
 			$sql = "CREATE Table IF NOT EXISTS $database.TeamMembers (".
 				"id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,".
@@ -117,12 +120,8 @@
 				"last_name VARCHAR(20) NOT NULL,".
 				"email VARCHAR(30) NOT NULL,".
 				"password VARCHAR(20) NOT NULL,".
-				"skill INT NOT NULL,".
-				"skill_level INT NOT NULL,".
 				"work_hours INT NOT NULL,".
 				"role VARCHAR(10) NOT NULL,".
-				"CONSTRAINT fk_skill FOREIGN KEY (skill) REFERENCES Skills(id),".
-				"CONSTRAINT fk_nivel_skill FOREIGN KEY (skill_level) REFERENCES SkillLevel(id),".
 				"CONSTRAINT fk_work_hours FOREIGN KEY (work_hours) REFERENCES WorkingHours(id))";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {

@@ -1,3 +1,4 @@
+
 <?php
 include "../db_connection.php";
 $login_err = "";
@@ -46,8 +47,22 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link href="https://fonts.googleapis.com/css?family=Merienda+One" rel="stylesheet">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
 <body>
+<nav style="background: #f8f8f8" class="navbar navbar-default navbar-expand-xl navbar-light">
+		<div class="navbar-header d-flex col">
+			<a class="navbar-brand" href="#"><i class="fa fa-cube"></i>Task<b>Board</b></a>  		
+			<button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle navbar-toggler ml-auto">
+				<span class="navbar-toggler-icon"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+		</div>
+	</nav>
 	<div class="login-form">
 		<form method="post" class="needs-validation" action="" novalidate>
 		<h2 class="text-center">Sign in</h2>

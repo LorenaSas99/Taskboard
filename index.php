@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title><B> <i> <u> TaskBoard </u> </i> </B></title>
+	<title>TaskBoard</title>
 	<?php
 		session_start();
 		include 'db_connection.php';
