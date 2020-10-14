@@ -8,8 +8,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 	session_start();
 	$id = "";
 	$task_name = "";
-	$skill = "";
-	$skill_level = "";
+	$skill="";
+	$skill_level="";
 	$duration = "";
 	$assigned_to ="";
 	$status ="";
@@ -27,8 +27,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 			if($role == 'Admin'){
 				$id = $_POST['EditTaskId'];
 				$task_name = $_POST['EditTaskName'];
-				$skill = $_POST['EditSkill'];
-				$skill_level = $_POST['EditSkillLevel'];
+				$skill=$POST['EditSkill'];
+				$skill_level=$POST['EditSkillLevel'];
 				$duration = $_POST['EditDuration'];
 				$assigned_to = $_POST['EditAssignedTo'];
 				$status = $_POST['EditStatus'];

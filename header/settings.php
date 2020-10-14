@@ -28,9 +28,7 @@
 				<div class="table-title">
 					<div class="row">
 						<div class="col-sm-8"><h2><b>Users Management</b></h2></div>
-						<div class="col-sm-4">
-						<button type="button" class="btn btn-info add-new" data-toggle="modal" 
-						data-target="#AddSkill"><i class="fa fa-plus"></i> Add Skill</button></div>
+
 					</div>
 				</div>
 				<table class="table table-bordered">
@@ -40,11 +38,10 @@
 							<th style="width: 10em;">First Name</th>
 							<th style="width: 10em;">Last Name</th>
 							<th style="width: 15em;">Email</th>
-							<th style="width: 6em;">Skill Name</th>
-							<th style="width: 6em;">Skill Level</th>
+							<th style="width: 15em;">Skills</th>
 							<th style="width: 6em;">Work Hours</th>
 							<th style="width: 6em;">Role</th>
-							<th style="width: 6em;">Actions</th>	
+							<th style="width: 9em;">Actions</th>	
 						</tr>
 					</thead>
                 	<tbody>
@@ -52,6 +49,7 @@
 							include "../db_connection.php";
 							include "./edit_user.php";
 							include "./delete_user.php";
+							include "./add_user_skills.php";
 							$connection = mysqli_connect($db_hostname, $db_username, $db_password);
 							if(!$connection) {
 								echo"Database Connection Error...".mysqli_connect_error();
@@ -63,25 +61,8 @@
 									$first_name=$row["first_name"];
 									$last_name=$row["last_name"];
 									$email=$row["email"];
-									$skill=$row["skill"];
-									$skill_level=$row["skill_level"];
 									$work_hours=$row["work_hours"];
 									$role=$row["role"];
-										$sql1 ="SELECT * FROM $database.Skills WHERE id= '$skill' ";
-										$retval2 = mysqli_query( $connection, $sql1 );
-										if(! $retval2 ) {
-											echo "Error accessing table Skills: ".mysqli_error($connection);
-										}
-										$row = mysqli_fetch_assoc($retval2);
-										$skill_name= $row["skill"];
-
-										$sql2="SELECT * FROM $database.SkillLevel WHERE id=' $skill_level'";
-										$retval2 = mysqli_query( $connection, $sql2 );
-										if(! $retval2 ) {
-											echo "Error accessing table SkillLevel: ".mysqli_error($connection);
-										}
-										$row= mysqli_fetch_assoc($retval2);
-										$skill_level_name=$row["skill_level"];
 										
 										$sql3="SELECT * FROM $database.WorkingHours WHERE id=' $work_hours'";
 										$retval2 = mysqli_query( $connection, $sql3 );
@@ -95,18 +76,38 @@
 										"<td>$id</td>".
 										"<td>$first_name</td>".
 										"<td>$last_name</td>".
-										"<td>$email</td>".
-										"<td>$skill_name</td>".
-										"<td>$skill_level_name</td>".
-										"<td>$work_hours</td>".
+										"<td>$email</td>";
+										$sql="SELECT * FROM $database.UserSkills WHERE userid= '$id'";
+										$retval3=mysqli_query($connection,$sql);
+										if(! $retval3 ) {
+											echo "Error accessing table UserSkills: ".mysqli_error($connection);
+										}
+										echo "<td> <select>";
+										while($row = mysqli_fetch_assoc($retval3)){
+											$skill_id=$row["skill_id"];
+											$skill_level=$row["skill_level"];
+											$sql4="SELECT * FROM $database.Skills WHERE id='$skill_id'";
+											$retval4=mysqli_query($connection,$sql4);
+											$skill_name=mysqli_fetch_assoc($retval4)["skill"];
+											$sql5="SELECT * FROM $database.SkillLevel WHERE id='$skill_level'";
+											$retval5=mysqli_query($connection,$sql5);
+											$skill_level_name=mysqli_fetch_assoc($retval5)["skill_level"];
+											echo "<option> $skill_name - $skill_level_name </option>";
+
+										}
+										echo "</select> </td>";
+
+
+										echo "<td>$work_hours</td>".
 										"<td>$role</td>".
 										"<td>".
 										"<a class=\"edit\" title=\"Edit\" data-toggle=\"modal\" data-target=\"#EditUser\" ".
-										"data-skill-id=\"$id\" data-first-name=\"$first_name\" data-last-name=\"$last_name\" data-skill-name=\"$skill_name\" data-skill-level=\"$skill_level_name\" data-work-hours=\"$work_hours\" data-role=\"$role\">".
+										"data-skill-id=\"$id\" data-first-name=\"$first_name\" data-last-name=\"$last_name\" data-work-hours=\"$work_hours\" data-role=\"$role\">".
 										"<i class=\"material-icons\">&#xE254;</i></a>".
 										"<a class=\"delete\" title=\"Delete\" data-toggle=\"modal\" data-target=\"#DeleteUser\" ".
-										"data-user-id=\"$id\" data-user-name=\"$first_name $last_name\"><i class=\"material-icons\">&#xE872;</i></a>";
-					
+										"data-user-id=\"$id\" data-user-name=\"$first_name $last_name\"><i class=\"material-icons\">&#xE872;</i></a>".
+										"<a  title=\"Add\" data-toggle=\"modal\" data-target=\"#AddUserSkill\" ".
+										"data-user-id=\"$id\"><i class=\"fa fa-plus\"></i></a>".
 										"</td>".
 										"</tr>" ;
 

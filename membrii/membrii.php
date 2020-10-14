@@ -94,8 +94,8 @@
 													"<span class=\"badge badge-pill badge-warning\">$hours_short</span>".
 												'</a>'.
 												'<div class="sidebar-submenu">'.
-													'<ul>';
-													$sql = "SELECT * FROM $database.UserSkills WHERE userid=$id";
+													'<ul>'.
+													/*$sql = "SELECT * FROM $database.UserSkills WHERE userid=$id";
 													$retval2 = mysqli_query( $connection, $sql );
 													while($row2 = mysqli_fetch_assoc($retval2)){
 														$skill_id =$row2["skill_id"];
@@ -117,9 +117,9 @@
 															"<a href=\"#\">$skill_name: <span style=\"float: none; font-size: 1em;\" class=\"badge badge-pill badge-info\">$skill_level</span></a>".
 														'</li>';
 														
-													}
+													}*/
 													
-													echo '<li>'.
+													 '<li>'.
 															"<a href=\"#\">Working hours: <span style=\"float: none; font-size: 1em;\" class=\"badge badge-pill badge-warning\">$hours</span></a>".
 														'</li>'.
 													'</ul>'.

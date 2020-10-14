@@ -7,8 +7,6 @@ $database="taskboard";
 if($_SERVER["REQUEST_METHOD"] == "POST") {
     session_start();
     $id=$_POST["EditUserId"];
-    $skill_name = $_POST['SkillName'];
-    $skill_level= $_POST['SkillLevel'];
     $work_hours= $_POST['WorkingHours'];
     $role= $_POST['Role'];
     $connection = mysqli_connect($db_hostname, $db_username, $db_password);
@@ -16,24 +14,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 	if(!$connection) {
 		echo "Database Connection Error...".mysqli_connect_error();
 	} else {
-            $sql1 = "SELECT * from $database.Skills WHERE skill='$skill_name'";
-            $skill_id=0;
-            $retval = mysqli_query( $connection, $sql1 );
-            if(! $retval ) {
-				echo"Error access in table Skills".mysqli_error($connection);
-			}else{
-                $result = mysqli_fetch_assoc($retval);
-                $skill_id=$result['id'];
-            }
-            $sql1 = "SELECT * from $database.SkillLevel WHERE skill_level='$skill_level'";
-            $skill_level_id=0;
-            $retval = mysqli_query( $connection, $sql1 );
-            if(! $retval ) {
-				echo"Error access in table SkillLevel".mysqli_error($connection);
-			}else{
-                $result = mysqli_fetch_assoc($retval);
-                $skill_level_id=$result['id'];
-            }
             $sql1 = "SELECT * from $database.WorkingHours WHERE hour='$work_hours'";
             $work_hours_id=0;
             $retval = mysqli_query( $connection, $sql1 );
@@ -44,7 +24,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                 $work_hours_id=$result['id'];
             }
 
-            $sql = "UPDATE Taskboard.TeamMembers SET skill=$skill_id, skill_level=$skill_level_id, work_hours=$work_hours_id,".
+            $sql = "UPDATE Taskboard.TeamMembers SET work_hours=$work_hours_id,".
             "role='$role' WHERE id=$id";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
@@ -84,49 +64,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 						<span style="display: inline-block; width: 10em; text-align: left;"> <i class="fa fa-list"></i> Last Name</span>
 					</span>
 					<input type="text" id="edit-last-name" class="form-control" name="EditLastName" placeholder="Last Name" disabled>
-				</div>
-			</div>
-
-			<div class="form-group">
-				<div class="input-group">
-					<span class="input-group-addon">
-						<span style="display: inline-block; width: 10em; text-align: left;"> <i class="fa fa-list"></i> Skill Name</span>
-					</span>
-					<select class="form-control" id="edit-skill-name" name="SkillName">
-                        <?php
-                        $sql="SELECT * FROM $database.Skills";
-                        $connection = mysqli_connect($db_hostname, $db_username, $db_password);
-	                    if(!$connection) {
-		                    echo "Database Connection Error...".mysqli_connect_error();
-	                    } else {
-                            $retval = mysqli_query( $connection, $sql );
-						    while($row = mysqli_fetch_assoc($retval)) {
-                                $skill=$row["skill"];
-                                echo "<option>$skill</option>";
-                            }
-                        }
-                        ?>
-					</select>
-				</div>
-			</div>
-
-            <div class="form-group">
-				<div class="input-group">
-					<span class="input-group-addon">
-						<span style="display: inline-block; width: 10em; text-align: left;"> <i class="fa fa-list"></i> Skill Level</span>
-					</span>
-					<select class="form-control" id="edit-skill-level" name="SkillLevel">
-						<option>Level 1</option>
-						<option>Level 2</option>
-						<option>Level 3</option>
-						<option>Level 4</option>
-						<option>Level 5</option>
-						<option>Level 6</option>
-						<option>Level 7</option>
-						<option>Level 8</option>
-						<option>Level 9</option>
-						<option>Level 10</option>
-					</select>
 				</div>
 			</div>
 

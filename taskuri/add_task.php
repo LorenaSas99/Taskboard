@@ -53,12 +53,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 		if (mysqli_num_rows($retval) == 1) {
 			while($row = mysqli_fetch_assoc($retval)) {
 				$user_id = $row["id"];
-				$user_skill_id = $row["skill"];
-				$user_skill_level_id = $row["skill_level"];
 			}
 		}
 
-		if ($skill_id == $user_skill_id && $user_skill_level_id >= $level_id) {
+		//if ($skill_id == $user_skill_id && $user_skill_level_id >= $level_id) {
 			$sql="SELECT * FROM $database.TaskStatus WHERE task_status='$status'";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
@@ -76,7 +74,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 			if(! $retval ) {
 				echo"Error access in table TeamMembers".mysqli_error($connection);
 			}
-		}
+		//}
 		
         mysqli_close($connection);
 	}
