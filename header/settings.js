@@ -59,9 +59,12 @@ $('#EditSkill').on('shown.bs.modal', function (e) {
     document.getElementById('user-name').innerHTML = "Are you sure you want to delete user <i>" + userName + "</i>?";
     document.getElementById("UserIdInput").value = parseInt(userId);
   });
+
   $('#AddUserSkill').on('shown.bs.modal', function (e) {
     //get data-id attribute of the clicked element
+    //console.log("Add user skill");
     var UserId = $(e.relatedTarget).data('user-id');
-    document.getElementById("UserIdInput").value = parseInt(UserId);
+    //console.log(UserId);
+    document.getElementById("AddUserIdInput").value = parseInt(UserId);
   });
 

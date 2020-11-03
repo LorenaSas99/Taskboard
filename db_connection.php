@@ -119,6 +119,7 @@
 				"first_name VARCHAR(20) NOT NULL,".
 				"last_name VARCHAR(20) NOT NULL,".
 				"email VARCHAR(30) NOT NULL,".
+				"email_confirmed BOOLEAN NOT NULL,".
 				"password VARCHAR(20) NOT NULL,".
 				"work_hours INT NOT NULL,".
 				"role VARCHAR(10) NOT NULL,".

@@ -93,6 +93,8 @@
 											$retval5=mysqli_query($connection,$sql5);
 											$skill_level_name=mysqli_fetch_assoc($retval5)["skill_level"];
 											echo "<option> $skill_name - $skill_level_name </option>";
+											
+											
 
 										}
 										echo "</select> </td>";

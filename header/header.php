@@ -27,7 +27,28 @@
 		<div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
 			<ul class="nav navbar-nav navbar-right ml-auto">
 				<li><a href="" class="dropdown-item" onclick="logout()"><i class="fa fa-power-off"></i> Logout</a></li>
-				<li><a href="" class="dropdown-item" onclick="GoToSettings()"><i class="fa fa-cog"></i> Settings</a></li>
+				<?php
+					include '../db_connection.php';
+					session_start();
+					if (isset($_SESSION['user_id'])) {
+						$userId=$_SESSION['user_id'];
+						$sql= "SELECT * FROM $database.TeamMembers WHERE id='$userId'";
+						$connection = mysqli_connect($db_hostname, $db_username, $db_password);
+						if(!$connection) {
+							echo "Database Connection Error...".mysqli_connect_error();
+						} else{
+							$retval = mysqli_query( $connection, $sql );
+							if($retval){
+								$user =mysqli_fetch_assoc($retval);
+								$role = $user['role'];
+								if($role == 'Admin'){
+									echo '<li><a href="" class="dropdown-item" onclick="GoToSettings()"><i class="fa fa-cog"></i> Settings</a></li>';
+								}
+							}
+						}
+					}
+				?>
+				
 			</ul>
 		</div>
 	</nav>

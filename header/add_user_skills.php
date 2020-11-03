@@ -95,7 +95,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 					</select>
 				</div>
             </div>
-            <input style="visibility: hidden;" type="number" name="UserId" id="UserIdInput">
+            <input style="visibility: hidden;" type="number" name="UserId" id="AddUserIdInput">
 			<div id="add_user_skill_error" style="width: 100%; margin-top: .25rem; margin-bottom: .25rem; font-size: 80%; color: #dc3545;"></div>
 			<div class="form-group">
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

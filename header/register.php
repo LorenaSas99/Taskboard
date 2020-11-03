@@ -1,5 +1,14 @@
 <?php
+
 	include "../db_connection.php";
+	use PHPMailer\PHPMailer\PHPMailer;
+	use PHPMailer\PHPMailer\SMTP;
+	use PHPMailer\PHPMailer\Exception;
+
+	require 'C:/Users/LORENA/vendor/phpmailer/phpmailer/src/Exception.php';
+	require 'C:/Users/LORENA/vendor/phpmailer/phpmailer/src/PHPMailer.php';
+	require 'C:/Users/LORENA/vendor/phpmailer/phpmailer/src/SMTP.php';
+
 	$register_err = "";
 	if($_SERVER["REQUEST_METHOD"] == "POST") {
 		session_start();
@@ -33,14 +42,43 @@
 				echo"Error access in table TeamMembers2: ".mysqli_error($connection);
 			}
 			if (mysqli_num_rows($retval) == 0) {
-				$sql= "INSERT INTO Taskboard.TeamMembers (first_name,last_name,email,password,work_hours,role) ".
-				"VALUES ('$first_name','$last_name','$email','$password',$work_hours_id,'$role')";
+				$sql= "INSERT INTO Taskboard.TeamMembers (first_name,last_name,email,email_confirmed,password,work_hours,role) ".
+				"VALUES ('$first_name','$last_name','$email',false,'$password',$work_hours_id,'$role')";
 				$retval= mysqli_query($connection, $sql);
 				if(!$retval ) {
 					echo "Error access in table TeamMembers: ".mysqli_error($connection);
 				} else {
-					// Redirect to Login page
-					header("location: http://localhost/taskboard/header/login.php");
+					//send confirmation email
+					$mail = new PHPMailer(true);
+					try {
+						//Server settings
+						$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
+						$mail->isSMTP();                                            // Send using SMTP
+						$mail->Host       = "smtp.gmail.com";                   // Set the SMTP server to send through
+						$mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+						$mail->SMTPSecure = "ssl";
+						$mail->Username   = "lorena.sas99@e-uvt.ro";                    // SMTP username
+						$mail->Password   = "dolinuruda20";                               // SMTP password
+						//$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+						$mail->Port       = 465;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+					
+						//Recipients
+						$mail->setFrom('lorena.sas99@e-uvt.ro', 'TaskBoard');
+						$mail->addAddress($email, $first_name);     // Add a recipient
+					
+						// Content
+						$mail->isHTML(true);                                  // Set email format to HTML
+						$mail->Subject = 'TaskBoard confirm email ';
+						$mail->Body    = '<p>Pentru a confirma email-ul, dati click pe link-ul urmator:</p>';
+					
+					
+						$mail->send();
+						echo 'Message has been sent';
+						header("location: http://localhost/taskboard/header/login.php");
+					} catch (Exception $e) {
+						echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+					}
+					
 				}
 			} else {
 				$register_err = "User already exists";
