@@ -35,12 +35,22 @@
 					$work_hours_id=$row["id"];
 				}
 			}
-		
+			$sql = "SELECT * FROM Taskboard.TeamMembers";
+			$retval = mysqli_query($connection, $sql);
+			if($retval){
+				if(mysqli_num_rows($retval) == 0){
+					//nu exista user inregistrat in BD
+					//primul user va fi mereu admin
+					$role = 'Admin';
+				}
+			}
+
 			$sql= "SELECT * FROM Taskboard.TeamMembers WHERE email= '$email'";
 			$retval= mysqli_query($connection, $sql);
 			if(! $retval ) {
 				echo"Error access in table TeamMembers2: ".mysqli_error($connection);
 			}
+			
 			if (mysqli_num_rows($retval) == 0) {
 				$sql= "INSERT INTO Taskboard.TeamMembers (first_name,last_name,email,email_confirmed,password,work_hours,role) ".
 				"VALUES ('$first_name','$last_name','$email',false,'$password',$work_hours_id,'$role')";
@@ -49,6 +59,14 @@
 					echo "Error access in table TeamMembers: ".mysqli_error($connection);
 				} else {
 					//send confirmation email
+					$sql = "SELECT * FROM Taskboard.TeamMembers WHERE email= '$email'";
+					$retval = mysqli_query($connection, $sql);
+					$id = 0;
+					if($retval){
+						$user = mysqli_fetch_assoc($retval);
+						$id = $user['id'];
+					}
+
 					$mail = new PHPMailer(true);
 					try {
 						//Server settings
@@ -56,20 +74,21 @@
 						$mail->isSMTP();                                            // Send using SMTP
 						$mail->Host       = "smtp.gmail.com";                   // Set the SMTP server to send through
 						$mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-						$mail->SMTPSecure = "ssl";
-						$mail->Username   = "lorena.sas99@e-uvt.ro";                    // SMTP username
-						$mail->Password   = "dolinuruda20";                               // SMTP password
+						$mail->SMTPSecure = "tls";
+						$mail->Username   = "taskboard7@gmail.com";                    // SMTP username
+						$mail->Password   = "aplicatie123456";                               // SMTP password
 						//$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
-						$mail->Port       = 465;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+						$mail->Port       = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 					
 						//Recipients
-						$mail->setFrom('lorena.sas99@e-uvt.ro', 'TaskBoard');
+						$mail->setFrom('taskboard7@gmail.com', 'TaskBoard');
 						$mail->addAddress($email, $first_name);     // Add a recipient
 					
 						// Content
 						$mail->isHTML(true);                                  // Set email format to HTML
 						$mail->Subject = 'TaskBoard confirm email ';
-						$mail->Body    = '<p>Pentru a confirma email-ul, dati click pe link-ul urmator:</p>';
+						$mail->Body    = '<p>Pentru a confirma email-ul, dati click pe link-ul urmator:</p>'.
+							"<a href='http://localhost/taskboard/header/validare.php?id=$id'>Confirm email</a>";
 					
 					
 						$mail->send();
@@ -101,6 +120,17 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+<nav style="background: #f8f8f8" class="navbar navbar-default navbar-expand-xl navbar-light">
+		<div class="navbar-header d-flex col">
+			<a class="navbar-brand" href="#"><i class="fa fa-cube"></i>Task<b>Board</b></a>  		
+			<button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle navbar-toggler ml-auto">
+				<span class="navbar-toggler-icon"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+		</div>
+</nav>
 	<div class="signup-form">
 		<form method="post" class="needs-validation" action="" novalidate>
 		<h2 class="text-center">Sign Up</h2>

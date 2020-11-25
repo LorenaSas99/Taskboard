@@ -68,3 +68,39 @@ $('#EditSkill').on('shown.bs.modal', function (e) {
     document.getElementById("AddUserIdInput").value = parseInt(UserId);
   });
 
+  //paginare
+$(document).ready(function () {
+  let t = document.getElementsByClassName('.skill_item').length;
+  $('.skills_management').rpmPagination({
+     limit: 10,
+      total: t,
+      domElement: '.skill_item'
+  });
+
+   let t1 = document.getElementsByClassName('.user_item').length;
+  $('.user_management').rpmPagination({
+     limit: 10,
+      total: t1,
+      domElement: '.user_item'
+  });
+    let TabId = window.localStorage.getItem("Taskboard-tab");
+    console.log("TabId:"+ TabId);
+
+  if(TabId == 2){
+    console.log("elm");
+    document.getElementById("user").classList.remove("active");
+    document.getElementById("skill").classList.add("active");
+    document.getElementsByClassName("tab-pane container")[0].classList.remove("active");
+    document.getElementsByClassName("tab-pane container")[1].classList.remove("fade");
+    document.getElementsByClassName("tab-pane container")[0].classList.add("fade");
+    document.getElementsByClassName("tab-pane container")[1].classList.add("active");
+
+  }
+});
+
+//salvare in local storage
+function tabselected(TabId){
+  window.localStorage.setItem("Taskboard-tab",TabId);
+}
+
+

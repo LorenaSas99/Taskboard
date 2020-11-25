@@ -183,3 +183,17 @@ function stop(id) {
   document.getElementById("start-" + id).disabled = false;
   document.getElementById("stop-" + id).disabled = true;
 }
+
+//paginare
+$(document).ready(function () {
+  let t = document.getElementsByClassName('.task_item').length;
+  $('.example').rpmPagination({
+     limit: 10,
+      total: t,
+      domElement: '.task_item'
+  });
+  console.log(t);
+});
+
+
+  

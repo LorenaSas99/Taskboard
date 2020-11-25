@@ -18,12 +18,12 @@
 	<div class="container" style="padding: 0;">
 	<ul class="nav nav-tabs">
   		<li class="nav-item">
-		  <a class="nav-link active" data-toggle="tab" href="#User-Manager">Users</a></li>
+		  <a class="nav-link active" onclick = "tabselected(1)" data-toggle="tab" href="#User-Manager" id = "user">Users</a></li>
   		<li class="nav-item">
-		  <a class="nav-link" data-toggle="tab" href="#Skill-Manager">Skills</a></li>
+		  <a class="nav-link" onclick = "tabselected(2)" data-toggle="tab" href="#Skill-Manager" id = "skill">Skills</a></li>
 	</ul>
 	<div class="tab-content">
-  		<div id="User-Manager" class="tab-pane container active">
+  		<div id="User-Manager" class="tab-pane container active" id = "user-content">
     		<div class="table-wrapper">
 				<div class="table-title">
 					<div class="row">
@@ -34,7 +34,6 @@
 				<table class="table table-bordered">
 					<thead>
 						<tr>
-							<th style="width: 3em;">#</th>
 							<th style="width: 10em;">First Name</th>
 							<th style="width: 10em;">Last Name</th>
 							<th style="width: 15em;">Email</th>
@@ -72,8 +71,7 @@
 										$row= mysqli_fetch_assoc($retval2);
 										$work_hours=$row["hour"];
 
-										echo "<tr>".
-										"<td>$id</td>".
+										echo "<tr class = 'user_item'>".
 										"<td>$first_name</td>".
 										"<td>$last_name</td>".
 										"<td>$email</td>";
@@ -97,7 +95,9 @@
 											
 
 										}
-										echo "</select> </td>";
+
+										echo "</select> <a  title=\"Add\" data-toggle=\"modal\" data-target=\"#AddUserSkill\" ".
+										"data-user-id=\"$id\"><i class=\"fa fa-plus\"></i></a> </td>";
 
 
 										echo "<td>$work_hours</td>".
@@ -108,8 +108,7 @@
 										"<i class=\"material-icons\">&#xE254;</i></a>".
 										"<a class=\"delete\" title=\"Delete\" data-toggle=\"modal\" data-target=\"#DeleteUser\" ".
 										"data-user-id=\"$id\" data-user-name=\"$first_name $last_name\"><i class=\"material-icons\">&#xE872;</i></a>".
-										"<a  title=\"Add\" data-toggle=\"modal\" data-target=\"#AddUserSkill\" ".
-										"data-user-id=\"$id\"><i class=\"fa fa-plus\"></i></a>".
+										
 										"</td>".
 										"</tr>" ;
 
@@ -119,9 +118,14 @@
 						?>
 					</tbody>
 				</table>
+				<nav aria-label="Page navigation">
+				<ul class="pagination user_management">
+					
+				</ul>
+			</nav>
 			</div>
   		</div>
-  		<div id="Skill-Manager" class="tab-pane container fade">
+  		<div id="Skill-Manager" class="tab-pane container fade" id = "skill-content">
     		<div class="table-wrapper">
             <div class="table-title">
                 <div class="row">
@@ -134,7 +138,6 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-						<th style="width: 3em;">#</th>
                         <th style="width: 10em;">Skill Name</th>
 						<th style="width: 6em;">Actions</th>
                         
@@ -167,8 +170,7 @@
 								}
 								}
 							//if($role == 'Admin'){
-							echo "<tr>".
-								"<td>$id</td>".
+							echo "<tr class = 'skill_item'>".
 								"<td><b>$skill_name</b></td>".
 								"<td>".
 								"<a class=\"edit\" title=\"Edit\" data-toggle=\"modal\" data-target=\"#EditSkill\" ".
@@ -185,7 +187,12 @@
 					mysqli_close($connection);
 				?>
                 </tbody>
-            </table>
+			</table>
+			<nav aria-label="Page navigation">
+				<ul class="pagination skills_management">
+					
+				</ul>
+			</nav>
         	</div>
     		</div>
   		</div>
@@ -196,5 +203,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="settings.js"></script>
+	<script src="../lib/pagination.js"></script>
+
 </body>
 </html>

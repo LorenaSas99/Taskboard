@@ -44,7 +44,6 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-						<th style="width: 3em;">#</th>
                         <th style="width: 10em;">Task Name</th>
                         <th style="width: 4em;">Skill</th>
 						<th style="width: 5em;">Level</th>
@@ -128,8 +127,8 @@
 								}
 								}
 							if($assigned_member_id == $userId || $role == 'Admin'){
-							echo "<tr>".
-								"<td>$id</td>".
+							echo "<tr class = 'task_item'>".
+								
 								"<td><b>$task_name</b></td>".
 								"<td>$skill</td>".
 								"<td>$skill_level</td>".
@@ -148,7 +147,7 @@
 									"</div>";
 								echo	
 								"</td>".
-								"<td>$first_name $last_name</td>".
+								"<td><a href=\"\" data-toggle=\"tooltip\" title=\"Python,Java\">$first_name $last_name</a></td>".
 								"<td><span id=\"task-status-$id\" class=\"badge badge-$label\">$task_status</span></td>".
 								"<td>".
 								"<a class=\"edit\" title=\"Edit\" data-toggle=\"modal\" data-target=\"#EditTask\" ".
@@ -170,6 +169,11 @@
 				?>
                 </tbody>
             </table>
+			<nav aria-label="Page navigation">
+				<ul class="pagination example">
+					
+				</ul>
+			</nav>
         </div>
     </div>
 
@@ -177,5 +181,6 @@
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="taskuri.js"></script>
+	<script src="../lib/pagination.js"></script>
 </body>
 </html>

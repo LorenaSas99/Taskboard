@@ -12,21 +12,26 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 	if(!$connection) {
 		echo "Database Connection Error...".mysqli_connect_error();
 	} else {
-		$retval = mysqli_query( $connection, $sql );
-		if(! $retval ) {
+		$user = mysqli_query( $connection, $sql );
+		if(! $user ) {
 			echo "Error access in table TeamMembers1: ".mysqli_error($connection);
 		}
-		$count = mysqli_num_rows($retval);
-		echo "count: $count";
-		if($count == 1) {
+		$count = mysqli_num_rows($user);
+		
+		if($count == 1 ) {
 			$user_id = 0;
-			while($row = mysqli_fetch_assoc($retval)) {
+			$email_confirmed= false;
+			while($row = mysqli_fetch_assoc($user)) {
 				$user_id = $row["id"];
+				$email_confirmed =$row["email_confirmed"];
 			}
-			$_SESSION['user_id'] = $user_id;
-			mysqli_close($connection);
+			if($email_confirmed == true){
+				$_SESSION['user_id'] = $user_id;
 			// Redirect to Home page
-			header("location: http://localhost/taskboard");
+				header("location: http://localhost/taskboard");
+			}else{
+				$login_err = "Login failed! Email not confirmed!";
+			}
 		} else {
 			$login_err = "The username or password is not correct!";
 		}
