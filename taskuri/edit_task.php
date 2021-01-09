@@ -1,19 +1,29 @@
 <?php
+function logger2($logMsg="logger", $filename="logger", $logData=""){     
+	$log  = date("j.n.Y h:i:s")." || $logMsg : ".print_r($logData,1).PHP_EOL .                  
+	"-------------------------".PHP_EOL;
+	file_put_contents('./'.$filename.date("j.n.Y").'.log', $log, FILE_APPEND);                      
+}
+
 $db_hostname="127.0.0.1:3306";
 $db_username="root";
 $db_password="";
 $database="taskboard";
 
-if($_SERVER["REQUEST_METHOD"] == "POST") {
+if($_SERVER["REQUEST_METHOD"] == "POST")
+ {
+	foreach($_POST as $key => $value){
+		logger2("param: $key $value");
+	}
 	session_start();
-	$id = "";
-	$task_name = "";
-	$skill="";
-	$skill_level="";
-	$duration = "";
-	$assigned_to ="";
-	$status ="";
-	$role="";
+	$id = $_POST['EditTaskId'];
+	$task_name = $_POST['EditTaskName'];
+	$skill=$_POST['EditSkill'];
+	$skill_level=$_POST['EditSkillLevel'];
+	$duration = $_POST['EditDuration'];
+	$assigned_to = $_POST['EditAssignedTo'];
+	$status = $_POST['EditStatus'];
+
 	$connection = mysqli_connect($db_hostname, $db_username, $db_password);
 	if (isset($_SESSION['user_id'])) {
 		$userId = $_SESSION['user_id'];
@@ -22,22 +32,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 		if(! $retval ) {
 			echo "Error accessing table TeamMembers0: ".mysqli_error($connection);
 		}
+		$rezults= mysqli_num_rows($retval);
+		logger2("select teammembers results: $rezults");
+
 		while($row = mysqli_fetch_assoc($retval)) {
 			$role= $row["role"];
-			if($role == 'Admin'){
-				$id = $_POST['EditTaskId'];
-				$task_name = $_POST['EditTaskName'];
-				$skill=$POST['EditSkill'];
-				$skill_level=$POST['EditSkillLevel'];
-				$duration = $_POST['EditDuration'];
-				$assigned_to = $_POST['EditAssignedTo'];
-				$status = $_POST['EditStatus'];
-			}
-			else {
-				$id = $_POST['EditTaskId'];
-				$duration = $_POST['EditDuration'];
-				$status = $_POST['EditStatus'];
-			}
+			logger2("edit task role: $role");
+
+
 
 		}
 	}
@@ -59,18 +61,26 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 				$status_id = $row["id"];
 			}
 		}
+		logger2("status id: $status_id");
 
 		if ($role == 'Admin') {
+			logger2("skill: $skill" );
 			$sql="SELECT * FROM $database.Skills WHERE skill='$skill'";
+			logger2("sql: $sql");
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
-				echo "Error access in table Skills".mysqli_error($connection);
+				logger2( "Error access in table Skills".mysqli_error($connection));
 			}
+			$cnt= mysqli_num_rows($retval);
+			logger2("Rezultate la select skills: $cnt");
+
 			if (mysqli_num_rows($retval) == 1) {
 				while($row = mysqli_fetch_assoc($retval)) {
 					$skill_id = $row["id"];
 				}
 			}
+		logger2("skill id: $skill_id");
+
 			$sql="SELECT * FROM $database.SkillLevel WHERE skill_level='$skill_level'";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
@@ -141,7 +151,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 								$retval = mysqli_query( $connection, $sql );
 								while($row = mysqli_fetch_assoc($retval)) {
 									$role=$row["role"];
-									
+									logger("rol: $role");
+
 									if($role == 'Operator'){
 									echo "<input type=\"text\" id=\"edit-task-name\" class=\"form-control\" name=\"EditTaskName\" placeholder=\"Task name\" required disabled>";
 									}else{
@@ -159,29 +170,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 					<span class="input-group-addon">
 						<span style="display: inline-block; width: 10em; text-align: left;"> <i class="fa fa-cogs"></i> Skill</span>
 					</span>
-					<?php
-							$connection = mysqli_connect($db_hostname, $db_username, $db_password);
-							if(!$connection) {
-								echo "Database Connection Error...".mysqli_connect_error();
-							} else {
-							
-							if (isset($_SESSION['user_id'])) {
-								$userId = $_SESSION['user_id'];
-								$sql = "SELECT * FROM $database.TeamMembers WHERE id = '$userId'";
-								$retval = mysqli_query( $connection, $sql );
-								while($row = mysqli_fetch_assoc($retval)) {
-									$role=$row["role"];
-									
-									if($role == 'Operator'){
-									echo "<select id=\"edit-skill\" class=\"form-control\" name=\"EditSkill\" disabled>";
-									}else{
-										echo "<select id=\"edit-skill\" class=\"form-control\" name=\"EditSkill\">";
-									}
-								}
-								mysqli_close($connection);
-							}
-							}
-						?>
+					<select id="edit-skill" class="form-control" name="EditSkill">
 					<?php
 							$connection = mysqli_connect($db_hostname, $db_username, $db_password);
 							if(!$connection) {
@@ -254,30 +243,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 					<span class="input-group-addon">
 						<span style="display: inline-block; width: 10em; text-align: left;"> <i class="fa fa-user"></i> Assigned To</span>
 					</span>
-					<?php
-							$connection = mysqli_connect($db_hostname, $db_username, $db_password);
-							if(!$connection) {
-								echo "Database Connection Error...".mysqli_connect_error();
-							} else {
-							
-							if (isset($_SESSION['user_id'])) {
-								$userId = $_SESSION['user_id'];
-								$sql = "SELECT * FROM $database.TeamMembers WHERE id = '$userId'";
-								$retval = mysqli_query( $connection, $sql );
-								while($row = mysqli_fetch_assoc($retval)) {
-									$role=$row["role"];
-									
-									if($role == 'Operator'){
-									echo "<select id=\"edit-assigned-to\" class=\"form-control\" name=\"EditAssignedTo\" onclick=\"changed();\" disabled>";
-									}else{
-										echo "<select id=\"edit-assigned-to\" class=\"form-control\" name=\"EditAssignedTo\" onclick=\"changed();\">";
-									}
-								}
-								mysqli_close($connection);
-							}
-							}
-						?>
-					
+
+					<select id="edit-assigned-to" class="form-control" name="EditAssignedTo" onclick="changed();">
 						<?php
 							$connection = mysqli_connect($db_hostname, $db_username, $db_password);
 							if(!$connection) {
@@ -288,8 +255,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 								while($row = mysqli_fetch_assoc($retval)) {
 									$first_name=$row["first_name"];
 									$last_name=$row["last_name"];
-									$role=$row["role"];
-									if($role == 'Operator')
+									
 									echo "<option>$first_name $last_name</option>";
 								}
 								mysqli_close($connection);

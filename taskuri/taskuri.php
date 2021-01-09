@@ -15,7 +15,10 @@
         <div class="table-wrapper">
             <div class="table-title">
                 <div class="row">
-                    <div class="col-sm-8"><h2>Taskboard <b>Details</b></h2></div>
+                    <div class="col-sm-3"><h2>Taskboard <b>Details</b></h2></div>
+					<div class="col-sm-5">
+					<input class="form-control" id="filter" type="text" placeholder="Search..">
+					</div>
                     <div class="col-sm-4">
 					<?php
 						include "../db_connection.php";
@@ -41,9 +44,10 @@
 						</div>
                 </div>
             </div>
-            <table class="table table-bordered">
+			
+            <table class="table table-bordered" id="table"> 
                 <thead>
-                    <tr>
+                    <tr class = "bg-warning">
                         <th style="width: 10em;">Task Name</th>
                         <th style="width: 4em;">Skill</th>
 						<th style="width: 5em;">Level</th>

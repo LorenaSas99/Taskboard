@@ -68,8 +68,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 				}
 			}
 			
-			$sql = "INSERT INTO Taskboard.Tasks(task_name,skill_required,level_required,duration,task_status,assigned_member) ".
-					"VALUES('$task_name',$skill_id,$level_id,$duration,$status_id,$user_id)";
+			$sql = "INSERT INTO Taskboard.Tasks(task_name,skill_required,level_required,duration,task_status,assigned_member,project) ".
+					"VALUES('$task_name',$skill_id,$level_id,$duration,$status_id,$user_id,1)";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
 				echo"Error access in table TeamMembers".mysqli_error($connection);
@@ -166,8 +166,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 								while($row = mysqli_fetch_assoc($retval)) {
 									$first_name=$row["first_name"];
 									$last_name=$row["last_name"];
-									$role= $row["role"];
-									if($role == 'Operator')
+									
 									echo "<option>$first_name $last_name</option>";
 								}
 								mysqli_close($connection);

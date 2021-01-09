@@ -33,7 +33,7 @@
 				</div>
 				<table class="table table-bordered">
 					<thead>
-						<tr>
+						<tr class = "bg-warning">
 							<th style="width: 10em;">First Name</th>
 							<th style="width: 10em;">Last Name</th>
 							<th style="width: 15em;">Email</th>
@@ -137,7 +137,7 @@
             </div>
             <table class="table table-bordered">
                 <thead>
-                    <tr>
+                    <tr class = "bg-warning">
                         <th style="width: 10em;">Skill Name</th>
 						<th style="width: 6em;">Actions</th>
                         

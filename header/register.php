@@ -52,8 +52,8 @@
 			}
 			
 			if (mysqli_num_rows($retval) == 0) {
-				$sql= "INSERT INTO Taskboard.TeamMembers (first_name,last_name,email,email_confirmed,password,work_hours,role) ".
-				"VALUES ('$first_name','$last_name','$email',false,'$password',$work_hours_id,'$role')";
+				$sql= "INSERT INTO Taskboard.TeamMembers (first_name,last_name,email,email_confirmed,password,work_hours,role,team) ".
+				"VALUES ('$first_name','$last_name','$email',false,'$password',$work_hours_id,'$role',1)";
 				$retval= mysqli_query($connection, $sql);
 				if(!$retval ) {
 					echo "Error access in table TeamMembers: ".mysqli_error($connection);

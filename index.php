@@ -8,6 +8,7 @@
 		if (!isset($_SESSION['user_id'])) {
 			header("location: http://localhost/taskboard/header/login.php");
 		}
+		
 	?>
 </head>
 	<frameset rows="50px,*" border="0">

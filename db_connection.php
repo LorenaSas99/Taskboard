@@ -4,6 +4,12 @@
 	$db_password="";
 	$database="taskboard";
 
+	function logger($logMsg="logger", $filename="logger", $logData=""){     
+		$log  = date("j.n.Y h:i:s")." || $logMsg : ".print_r($logData,1).PHP_EOL .                  
+		"-------------------------".PHP_EOL;
+		file_put_contents('./'.$filename.date("j.n.Y").'.log', $log, FILE_APPEND);                      
+	}
+
 	function initializeDatabase() {
 		$db_hostname="127.0.0.1:3306";
 		$db_username="root";
@@ -114,6 +120,26 @@
 				echo"Could not create table UserSkills".mysqli_error($connection);
 			}
 
+			$sql = "CREATE Table IF NOT EXISTS $database.Projects (".
+				"id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,".
+				"nume VARCHAR(30) NOT NULL)";
+			$retval = mysqli_query( $connection, $sql );
+			if(! $retval ) {
+				echo"Could not create table Projects".mysqli_error($connection);
+			}else{
+				$sql="INSERT INTO $database.Projects(nume) VALUES('General')";
+			}
+
+			$sql = "CREATE Table IF NOT EXISTS $database.Teams (".
+				"id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,".
+				"team_name VARCHAR(30) NOT NULL)";
+			$retval = mysqli_query( $connection, $sql );
+			if(! $retval ) {
+				echo"Could not create table Teams".mysqli_error($connection);
+			}else{
+				$sql="INSERT INTO $database.Teams(team_name) VALUES('All')";
+			}
+
 			$sql = "CREATE Table IF NOT EXISTS $database.TeamMembers (".
 				"id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,".
 				"first_name VARCHAR(20) NOT NULL,".
@@ -123,6 +149,8 @@
 				"password VARCHAR(20) NOT NULL,".
 				"work_hours INT NOT NULL,".
 				"role VARCHAR(10) NOT NULL,".
+				"team INT NOT NULL,".
+				"CONSTRAINT fk_team FOREIGN KEY (team) REFERENCES Teams(id),".
 				"CONSTRAINT fk_work_hours FOREIGN KEY (work_hours) REFERENCES WorkingHours(id))";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
@@ -137,10 +165,12 @@
 				"duration INT NOT NULL,".
 				"task_status INT NOT NULL,".
 				"assigned_member INT NOT NULL,".
+				"project INT NOT NULL,".
 				"CONSTRAINT fk_skill_required FOREIGN KEY (skill_required) REFERENCES Skills(id),".
 				"CONSTRAINT fk_level_required FOREIGN KEY (level_required) REFERENCES SkillLevel(id),".
 				"CONSTRAINT fk_task_status FOREIGN KEY (task_status) REFERENCES TaskStatus(id),".
-				"CONSTRAINT fk_assigned_member FOREIGN KEY (assigned_member) REFERENCES TeamMembers(id))";
+				"CONSTRAINT fk_assigned_member FOREIGN KEY (assigned_member) REFERENCES TeamMembers(id),".
+				"CONSTRAINT fk_project FOREIGN KEY (project) REFERENCES Projects(id))";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
 				echo"Could not create table Tasks".mysqli_error($connection);
