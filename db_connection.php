@@ -122,22 +122,26 @@
 
 			$sql = "CREATE Table IF NOT EXISTS $database.Projects (".
 				"id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,".
-				"nume VARCHAR(30) NOT NULL)";
+				"nume VARCHAR(30) NOT NULL,".
+				"description VARCHAR(50) NOT NULL)";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
 				echo"Could not create table Projects".mysqli_error($connection);
 			}else{
-				$sql="INSERT INTO $database.Projects(nume) VALUES('General')";
+				$sql="INSERT INTO $database.Projects(nume, description) VALUES('General', 'ABC')";
+				mysqli_query($connection,$sql);
 			}
 
 			$sql = "CREATE Table IF NOT EXISTS $database.Teams (".
 				"id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,".
-				"team_name VARCHAR(30) NOT NULL)";
+				"team_name VARCHAR(30) NOT NULL,".
+				"descriptions VARCHAR(50) NOT NULL)";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
 				echo"Could not create table Teams".mysqli_error($connection);
 			}else{
-				$sql="INSERT INTO $database.Teams(team_name) VALUES('All')";
+				$sql="INSERT INTO $database.Teams(team_name, descriptions) VALUES('All', 'abc')";
+				mysqli_query($connection,$sql);
 			}
 
 			$sql = "CREATE Table IF NOT EXISTS $database.TeamMembers (".
