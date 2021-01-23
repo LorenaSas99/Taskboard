@@ -1,4 +1,5 @@
 <?php
+
 $add_task_err = "";
 if($_SERVER["REQUEST_METHOD"] == "POST") {
 	$task_name = $_POST['TaskName'];
@@ -7,6 +8,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 	$duration = $_POST['Duration'];
 	$assigned_to = $_POST['AssignedTo'];
 	$status = $_POST['Status'];
+	$project_name = $_POST['Project'];
 
 	$skill_id = 0;
 	$level_id = 0;
@@ -14,6 +16,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 	$user_id = 0;
 	$user_skill_id = 0;
 	$user_skill_level_id = 0;
+	$project_id = 0;
 
 
 	$connection = mysqli_connect($db_hostname, $db_username, $db_password);
@@ -67,9 +70,22 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 					$status_id = $row["id"];
 				}
 			}
+
+			$sql="SELECT * FROM $database.Projects WHERE nume='$project_name'";
+			$retval = mysqli_query( $connection, $sql );
+			if(! $retval ) {
+				echo "Error access in table Projects".mysqli_error($connection);
+			}
+			logger("nume proj".mysqli_num_rows($retval)."nume: $project_name");
+			
+			if (mysqli_num_rows($retval) == 1) {
+				while($row = mysqli_fetch_assoc($retval)) {
+					$project_id = $row["id"];
+				}
+			}
 			
 			$sql = "INSERT INTO Taskboard.Tasks(task_name,skill_required,level_required,duration,task_status,assigned_member,project) ".
-					"VALUES('$task_name',$skill_id,$level_id,$duration,$status_id,$user_id,1)";
+					"VALUES('$task_name',$skill_id,$level_id,$duration,$status_id,$user_id, $project_id)";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
 				echo"Error access in table TeamMembers".mysqli_error($connection);
@@ -187,6 +203,32 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 					</select>
 				</div>
 			</div>
+
+			<div class="form-group">
+				<div class="input-group">
+					<span class="input-group-addon">
+						<span style="display: inline-block; width: 10em; text-align: left;"> <i class="fa fa-check"></i> Projects </span>
+					</span>
+					<select class="form-control" name="Project">
+						<?php
+							$connection = mysqli_connect($db_hostname, $db_username, $db_password);
+							if(!$connection) {
+								echo"Database Connection Error...".mysqli_connect_error();
+							} else {
+								$sql="SELECT * FROM $database.Projects";
+								$retval = mysqli_query( $connection, $sql );
+								while($row = mysqli_fetch_assoc($retval)) {
+									$id=$row["id"];
+									$nume=$row["nume"];
+									
+									echo "<option>$nume</option>";
+								}
+							}
+						?>
+					</select>
+				</div>
+			</div>
+
 			<div id="add_task_error" style="width: 100%; margin-top: .25rem; margin-bottom: .25rem; font-size: 80%; color: #dc3545;"></div>
 			<div class="form-group">
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

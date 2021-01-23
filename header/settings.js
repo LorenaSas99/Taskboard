@@ -25,6 +25,29 @@ $('#EditSkill').on('shown.bs.modal', function (e) {
     document.getElementById("edit-skill-id").value = id;
   });
 
+  $('#EditTeam').on('shown.bs.modal', function (e) {
+    //get data-id attribute of the clicked element
+    var TeamName = $(e.relatedTarget).data('team-name');
+    var id= $(e.relatedTarget).data('team-id');
+    var Description = $(e.relatedTarget).data('description');
+
+    document.getElementById("edit-team-name").value = TeamName;
+    document.getElementById("edit-team-id").value = id;
+    document.getElementById("edit-description").value = Description;
+  });
+
+  $('#EditProject').on('shown.bs.modal', function (e) {
+    //get data-id attribute of the clicked element
+    var nume = $(e.relatedTarget).data('project-name');
+    var id= $(e.relatedTarget).data('project-id');
+    var Description = $(e.relatedTarget).data('description');
+
+    document.getElementById("edit-project-name").value = nume;
+    document.getElementById("edit-project-id").value = id;
+    document.getElementById("edit-project-description").value = Description;
+    console.log(Description);
+  });
+
   $('#EditUser').on('shown.bs.modal', function (e) {
     //get data-id attribute of the clicked element
     var SkillName = $(e.relatedTarget).data('skill-name');
@@ -52,6 +75,23 @@ $('#EditSkill').on('shown.bs.modal', function (e) {
     document.getElementById('skill-name').innerHTML = "Are you sure you want to delete skill <i>" + skillName + "</i>?";
     document.getElementById("SkillIdInput").value = parseInt(skillId);
   });
+
+  $('#DeleteTeam').on('shown.bs.modal', function (e) {
+    //get data-id attribute of the clicked element
+    var id = $(e.relatedTarget).data('team-id');
+    var TeamName = $(e.relatedTarget).data('team-name');
+    document.getElementById('team-name').innerHTML = "Are you sure you want to delete this team <i>" + TeamName + "</i>?";
+    document.getElementById("TeamIdInput").value = parseInt(id);
+  });
+
+  $('#DeleteProject').on('shown.bs.modal', function (e) {
+    //get data-id attribute of the clicked element
+    var id = $(e.relatedTarget).data('project-id');
+    var ProjectName = $(e.relatedTarget).data('project-name');
+    document.getElementById('project-name').innerHTML = "Are you sure you want to delete this project ?";
+    document.getElementById("ProjectIdInput").value = parseInt(id);
+  });
+
   $('#DeleteUser').on('shown.bs.modal', function (e) {
     //get data-id attribute of the clicked element
     var userId = $(e.relatedTarget).data('user-id');

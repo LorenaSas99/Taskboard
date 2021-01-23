@@ -18,8 +18,10 @@
 		$email= $_POST['Email'];
 		$work_hours = $_POST['WorkingHours'];
 		$role= "Operator";
+		$team= $_POST['Team'];
 
 		$work_hours_id = 0;
+		$team_name_id = 0;
 
 		$connection = mysqli_connect($db_hostname, $db_username, $db_password);
 		if(!$connection) {
@@ -33,6 +35,16 @@
 			if (mysqli_num_rows($retval) == 1) {
 				while($row = mysqli_fetch_assoc($retval)) {
 					$work_hours_id=$row["id"];
+				}
+			}
+			$sql="SELECT * FROM Taskboard.Teams WHERE team='$team_name'";
+			$retval = mysqli_query( $connection, $sql );
+			if(! $retval ) {
+				echo"Error access in table Teams".mysqli_error($connection);
+			}
+			if (mysqli_num_rows($retval) == 1) {
+				while($row = mysqli_fetch_assoc($retval)) {
+					$team_name_id=$row["id"];
 				}
 			}
 			$sql = "SELECT * FROM Taskboard.TeamMembers";
@@ -53,7 +65,7 @@
 			
 			if (mysqli_num_rows($retval) == 0) {
 				$sql= "INSERT INTO Taskboard.TeamMembers (first_name,last_name,email,email_confirmed,password,work_hours,role,team) ".
-				"VALUES ('$first_name','$last_name','$email',false,'$password',$work_hours_id,'$role',1)";
+				"VALUES ('$first_name','$last_name','$email',false,'$password',$work_hours_id,'$role',$team_name_id)";
 				$retval= mysqli_query($connection, $sql);
 				if(!$retval ) {
 					echo "Error access in table TeamMembers: ".mysqli_error($connection);
@@ -224,6 +236,31 @@
 						<option>4h/day</option>
 						<option>6h/day</option>
 						<option>8h/day</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="input-group">
+					<div class="input-group-prepend">
+          				<span class="input-group-text" id="teamPrepend" style="width: 9em;"><i class="fa fa-clock-o"> Teams</i></span>
+        			</div>
+					<select class="form-control" name="Team">
+						<?php
+							$connection = mysqli_connect($db_hostname, $db_username, $db_password);
+							if(!$connection) {
+								echo"Database Connection Error...".mysqli_connect_error();
+							} else {
+								$sql="SELECT * FROM $database.Teams";
+								$retval = mysqli_query( $connection, $sql );
+								while($row = mysqli_fetch_assoc($retval)) {
+									$id=$row["id"];
+									$team_name=$row["team_name"];
+									
+									echo "<option>$team_name</option>";
+								}
+							}
+						?>
 					</select>
 				</div>
 			</div>

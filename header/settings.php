@@ -25,6 +25,9 @@
             <li class="nav-item">
                <a class="nav-link" onclick = "tabselected(3)" data-toggle="tab" href="#Team-Manager" id = "team">Team</a>
             </li>
+            <li class="nav-item">
+               <a class="nav-link" onclick = "tabselected(4)" data-toggle="tab" href="#Project-Manager" id = "project">Projects</a>
+            </li>
          </ul>
          <div class="tab-content">
             <div id="User-Manager" class="tab-pane container active" id = "user-content">
@@ -45,7 +48,8 @@
                            <th style="width: 15em;">Skills</th>
                            <th style="width: 6em;">Work Hours</th>
                            <th style="width: 6em;">Role</th>
-                           <th style="width: 9em;">Actions</th>
+                           <th style="width: 9em;">Team</th>
+                           <th style="width: 6em;">Actions</th>
                         </tr>
                      </thead>
                      <tbody>
@@ -65,7 +69,8 @@
                            		$first_name=$row["first_name"];
                            		$last_name=$row["last_name"];
                            		$email=$row["email"];
-                           		$work_hours=$row["work_hours"];
+                                 $work_hours=$row["work_hours"];
+                                 $team_id=$row["team"];
                            		$role=$row["role"];
                            			
                            			$sql3="SELECT * FROM $database.WorkingHours WHERE id=' $work_hours'";
@@ -96,18 +101,33 @@
                            				$retval5=mysqli_query($connection,$sql5);
                            				$skill_level_name=mysqli_fetch_assoc($retval5)["skill_level"];
                            				echo "<option> $skill_name - $skill_level_name </option>";
-                           				
-                           				
-                           
-                           			}
+                                       
+                                    }
+                                    
+
                            
                            			echo "</select> <a  title=\"Add\" data-toggle=\"modal\" data-target=\"#AddUserSkill\" ".
                            			"data-user-id=\"$id\"><i class=\"fa fa-plus\"></i></a> </td>";
                            
                            
                            			echo "<td>$work_hours</td>".
-                           			"<td>$role</td>".
-                           			"<td>".
+                                    "<td>$role</td>";
+                                    $sql="SELECT * FROM $database.Teams";
+                                    $retval4=mysqli_query($connection,$sql);
+                                    if(! $retval){
+                                       echo "Error accessing table Teams: ".mysqli_error($connection);
+                                    }
+                                    echo "<td>";
+                                    while($row = mysqli_fetch_assoc($retval4)){
+                                       $id=$row["id"];
+                                       $team_name=$row["team_name"];
+                                       if($team_id == $id){
+                                          echo "$team_name";
+                                       }
+
+                                    }
+                                    echo "</td>";
+                           			echo "<td>".
                            			"<a class=\"edit\" title=\"Edit\" data-toggle=\"modal\" data-target=\"#EditUser\" ".
                            			"data-skill-id=\"$id\" data-first-name=\"$first_name\" data-last-name=\"$last_name\" data-work-hours=\"$work_hours\" data-role=\"$role\">".
                            			"<i class=\"material-icons\">&#xE254;</i></a>".
@@ -231,25 +251,28 @@
                            	echo"Database Connection Error...".mysqli_connect_error();
                            } else {
                            	$sql="SELECT * FROM $database.Teams";
-                           	$retval = mysqli_query( $connection, $sql );
+                              $retval = mysqli_query( $connection, $sql );
+                              if($retval)
                            	while($row = mysqli_fetch_assoc($retval)) {
                            		$id = $row["id"];
                            		$team_name=$row["team_name"];
-                           		$descriptions=$row["descriptions"];
+                           		$description=$row["description"];
                            		//if($role == 'Admin'){
                            		echo "<tr class = 'team_item'>".
 									   "<td><b>$team_name</b></td>".
-									   "<td><b>$descriptions</b></td>".
+									   "<td><b>$description</b></td>".
                            			"<td>".
                            			"<a class=\"edit\" title=\"Edit\" data-toggle=\"modal\" data-target=\"#EditTeam\" ".
-                           			"data-team-id=\"$id\" data-team-name=\"$team_name\" data-description-name=\"$descriptions\"><i class=\"material-icons\">&#xE254;</i></a>".
+                           			"data-team-id=\"$id\" data-team-name=\"$team_name\" data-description=\"$description\"><i class=\"material-icons\">&#xE254;</i></a>".
                            			"<a class=\"delete\" title=\"Delete\" data-toggle=\"modal\" data-target=\"#DeleteTeam\" ".
-                           			"data-team-id=\"$id\" data-team-name=\"$team_name\" data-description-name=\"$descriptions\"><i class=\"material-icons\">&#xE872;</i></a>";
-                           
+                           			"data-team-id=\"$id\" data-team-name=\"$team_name\" data-description=\"$description\"><i class=\"material-icons\">&#xE872;</i></a>";
+                                    
                            		"</td>".
                            		"</tr>" ;
                            	//}
-                           	}
+                           	}else{
+                                 echo "Selecting from Teams". mysqli_error($connection);
+                              }
                            
                            }
                            mysqli_close($connection); 
@@ -258,6 +281,72 @@
                   </table>
                   <nav aria-label="Page navigation">
                      <ul class="pagination team_management">
+                     </ul>
+                  </nav>
+               </div>
+            </div>
+
+            <div id="Project-Manager" class="tab-pane container fade">
+               <div class="table-wrapper">
+                  <div class="table-title">
+                     <div class="row">
+                        <div class="col-sm-8">
+                           <h2><b>Projects Management</b></h2>
+                        </div>
+                        <div class="col-sm-4">
+                           <button type="button" class="btn btn-info add-new" data-toggle="modal" 
+                              data-target="#AddProject"><i class="fa fa-plus"></i> Add Project</button>
+                        </div>
+                     </div>
+                  </div>
+                  <table class="table table-bordered">
+                     <thead>
+                        <tr class = "bg-warning">
+                           <th style="width: 10em;">Project Name</th>
+						         <th style="width: 10em;">Description</th>
+                           <th style="width: 6em;">Actions</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <?php 
+                           include "./add_project.php";
+                           include "./edit_project.php";
+                           include "./delete_project.php";
+                           $connection = mysqli_connect($db_hostname, $db_username, $db_password);
+                           if(!$connection) {
+                           	echo"Database Connection Error...".mysqli_connect_error();
+                           } else {
+                           	$sql="SELECT * FROM $database.Projects";
+                              $retval = mysqli_query( $connection, $sql );
+                              if($retval)
+                           	while($row = mysqli_fetch_assoc($retval)) {
+                           		$id = $row["id"];
+                           		$nume=$row["nume"];
+                           		$description=$row["description"];
+                           		//if($role == 'Admin'){
+                           		echo "<tr class = 'project_item'>".
+                                       "<td><b>$nume</b></td>".
+                                       "<td><b>$description</b></td>".
+                           			"<td>".
+                           			"<a class=\"edit\" title=\"Edit\" data-toggle=\"modal\" data-target=\"#EditProject\" ".
+                           			"data-project-id=\"$id\" data-project-name=\"$nume\" data-description=\"$description\"><i class=\"material-icons\">&#xE254;</i></a>".
+                           			"<a class=\"delete\" title=\"Delete\" data-toggle=\"modal\" data-target=\"#DeleteProject\" ".
+                           			"data-project-id=\"$id\" data-project-name=\"$nume\" data-description=\"$description\"><i class=\"material-icons\">&#xE872;</i></a>";
+                                    
+                           		"</td>".
+                           		"</tr>" ;
+                           	//}
+                           	}else{
+                                 echo "Selecting from Projects". mysqli_error($connection);
+                              }
+                           
+                           }
+                           mysqli_close($connection); 
+                           ?>
+                     </tbody>
+                  </table>
+                  <nav aria-label="Page navigation">
+                     <ul class="pagination project_management">
                      </ul>
                   </nav>
                </div>

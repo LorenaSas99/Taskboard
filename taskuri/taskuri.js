@@ -49,6 +49,7 @@
   $('#EditTask').on('shown.bs.modal', function (e) {
     //get data-id attribute of the clicked element
     var taskId = $(e.relatedTarget).data('task-id');
+    console.log(taskId);
     var taskName = $(e.relatedTarget).data('task-name');
     var skill = $(e.relatedTarget).data('skill');
     var level = $(e.relatedTarget).data('level');

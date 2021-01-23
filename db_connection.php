@@ -128,20 +128,41 @@
 			if(! $retval ) {
 				echo"Could not create table Projects".mysqli_error($connection);
 			}else{
-				$sql="INSERT INTO $database.Projects(nume, description) VALUES('General', 'ABC')";
-				mysqli_query($connection,$sql);
+				$sql1="SELECT * FROM $database.Projects";
+				$retval= mysqli_query($connection, $sql1);
+				if(! $retval){
+					echo "Could not select from table Projects".mysqli_error($connection);
+				}
+				else{
+					$count = mysqli_num_rows($retval);
+					if($count == 0){
+						$sql="INSERT INTO $database.Projects(nume, description) VALUES('Pro', 'abg')";
+						mysqli_query($connection,$sql);
+					}
+				}
 			}
 
 			$sql = "CREATE Table IF NOT EXISTS $database.Teams (".
 				"id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,".
 				"team_name VARCHAR(30) NOT NULL,".
-				"descriptions VARCHAR(50) NOT NULL)";
+				"description VARCHAR(50) NOT NULL)";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
 				echo"Could not create table Teams".mysqli_error($connection);
 			}else{
-				$sql="INSERT INTO $database.Teams(team_name, descriptions) VALUES('All', 'abc')";
-				mysqli_query($connection,$sql);
+				$sql1="SELECT * FROM $database.Teams";
+				$retval= mysqli_query($connection, $sql1);
+				if(! $retval){
+					echo "Could not select from table Teams".mysqli_error($connection);
+				}
+				else{
+					$count = mysqli_num_rows($retval);
+					if($count == 0){
+						$sql="INSERT INTO $database.Teams(team_name, description) VALUES('All', 'abc')";
+						mysqli_query($connection,$sql);
+					}
+				}
+				
 			}
 
 			$sql = "CREATE Table IF NOT EXISTS $database.TeamMembers (".

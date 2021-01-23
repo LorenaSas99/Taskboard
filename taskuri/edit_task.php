@@ -23,6 +23,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	$duration = $_POST['EditDuration'];
 	$assigned_to = $_POST['EditAssignedTo'];
 	$status = $_POST['EditStatus'];
+	$project_name = $_POST['EditProject'];
 
 	$connection = mysqli_connect($db_hostname, $db_username, $db_password);
 	if (isset($_SESSION['user_id'])) {
@@ -30,7 +31,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		$sql = "SELECT * FROM $database.TeamMembers WHERE id = '$userId'";
 		$retval = mysqli_query( $connection, $sql );
 		if(! $retval ) {
-			echo "Error accessing table TeamMembers0: ".mysqli_error($connection);
+			logger2("Error accessing table TeamMembers0: ".mysqli_error($connection));
 		}
 		$rezults= mysqli_num_rows($retval);
 		logger2("select teammembers results: $rezults");
@@ -47,20 +48,34 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	$skill_id = 0;
 	$level_id = 0;
 	$status_id = 0;
+	$project_id = 0;
 
 	if(!$connection) {
-		echo "Database Connection Error...".mysqli_connect_error();
+		logger2("Database Connection Error...".mysqli_connect_error());
 	} else {
 		$sql="SELECT * FROM $database.TaskStatus WHERE task_status='$status'";
 		$retval = mysqli_query( $connection, $sql );
 		if(! $retval ) {
-			echo "Error access in table TaskStatus".mysqli_error($connection);
+			logger2("Error access in table TaskStatus".mysqli_error($connection));
 		}
 		if (mysqli_num_rows($retval) == 1) {
 			while($row = mysqli_fetch_assoc($retval)) {
 				$status_id = $row["id"];
 			}
 		}
+
+		$sql="SELECT * FROM $database.Projects WHERE nume='$project_name'";
+		$retval = mysqli_query( $connection, $sql );
+		if(! $retval ) {
+			logger2("Error access in table Projects".mysqli_error($connection));
+		}
+		if (mysqli_num_rows($retval) == 1) {
+			while($row = mysqli_fetch_assoc($retval)) {
+				$project_id = $row["id"];
+				logger2("id project: $project_id");
+			}
+		}
+
 		logger2("status id: $status_id");
 
 		if ($role == 'Admin') {
@@ -84,7 +99,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 			$sql="SELECT * FROM $database.SkillLevel WHERE skill_level='$skill_level'";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
-				echo "Error access in table SkillLevel".mysqli_error($connection);
+				logger2("Error access in table SkillLevel".mysqli_error($connection));
 			}
 			if (mysqli_num_rows($retval) == 1) {
 				while($row = mysqli_fetch_assoc($retval)) {
@@ -97,7 +112,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 			$sql = "SELECT * FROM $database.TeamMembers WHERE first_name='$first_name' AND last_name='$last_name'";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
-				echo "Error access in table TeamMembers".mysqli_error($connection);
+				logger2( "Error access in table TeamMembers".mysqli_error($connection));
 			}
 			if (mysqli_num_rows($retval) == 1) {
 				while($row = mysqli_fetch_assoc($retval)) {
@@ -105,16 +120,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 				}
 			}
 			$sql = "UPDATE Taskboard.Tasks SET task_name='$task_name',skill_required=$skill_id,level_required=$level_id,duration=$duration,".
-					"task_status=$status_id,assigned_member=$user_id WHERE id=$id";
+					"task_status=$status_id,assigned_member=$user_id,project=$project_id WHERE id=$id";
+			logger2("modific: $sql");
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
-				echo"Error access in table TeamMembers".mysqli_error($connection);
+				logger2("Error access in table TeamMembers".mysqli_error($connection));
+			}else{
+				logger2("task editing");
 			}
 		} else {
 			$sql = "UPDATE Taskboard.Tasks SET duration=$duration,task_status=$status_id WHERE id=$id";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
-				echo"Error access in table TeamMembers".mysqli_error($connection);
+				logger2("Error access in table TeamMembers".mysqli_error($connection));
 			}
 		}
         mysqli_close($connection);
@@ -276,6 +294,32 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 					</select>
 				</div>
 			</div>
+
+			<div class="form-group">
+				<div class="input-group">
+					<span class="input-group-addon">
+						<span style="display: inline-block; width: 10em; text-align: left;"> <i class="fa fa-check"></i> Project </span>
+					</span>
+					<select id="edit-status" class="form-control" name="EditProject">
+					<?php
+							$connection = mysqli_connect($db_hostname, $db_username, $db_password);
+							if(!$connection) {
+								echo"Database Connection Error...".mysqli_connect_error();
+							} else {
+								$sql="SELECT * FROM $database.Projects";
+								$retval = mysqli_query( $connection, $sql );
+								while($row = mysqli_fetch_assoc($retval)) {
+									$id=$row["id"];
+									$nume=$row["nume"];
+									
+									echo "<option>$nume</option>";
+								}
+							}
+						?>
+					</select>
+				</div>
+			</div>
+
 			<input style="visibility: hidden;" type="number" name="EditTaskId" id="edit-task-id">
 			<div class="form-group">
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

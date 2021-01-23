@@ -54,6 +54,7 @@
 						<th style="width: 5em;">Duration</th>
 						<th style="width: 10em;">Progress</th>
 						<th style="width: 10em;">Assigned to</th>
+						<th style="width: 6em;">Projects</th>
 						<th style="width: 6em;">Status</th>
                         <th style="width: 6em;">Actions</th>
                     </tr>
@@ -77,6 +78,7 @@
 							$duration=$row["duration"];
 							$task_status_id=$row["task_status"];
 							$assigned_member_id=$row["assigned_member"];
+							$project_id=$row["project"];
 							$sql="SELECT * FROM $database.Skills WHERE id=$skill_required_id";
 							$retval1 = mysqli_query( $connection, $sql );
 							$skill="";
@@ -124,12 +126,24 @@
 								$sql = "SELECT * FROM $database.TeamMembers WHERE id = '$userId'";
 								$retval2 = mysqli_query( $connection, $sql );
 								if(! $retval2 ) {
-									echo "Error accessing table TeamMembers0: ".mysqli_error($connection);
+									echo "Error accessing table TeamMembers: ".mysqli_error($connection);
 								}
 								while($row = mysqli_fetch_assoc($retval2)) {
 									$role= $row["role"];
 								}
+							}
+
+							$sql="SELECT * FROM $database.Projects";
+							$retval2 = mysqli_query( $connection, $sql );
+							$project_name= "";
+							while($row2= mysqli_fetch_assoc($retval2)){
+								$id_p=$row2["id"];
+								if($id_p == $project_id){
+									$project_name=$row2["nume"];
+									
 								}
+							}
+
 							if($assigned_member_id == $userId || $role == 'Admin'){
 							echo "<tr class = 'task_item'>".
 								
@@ -152,6 +166,7 @@
 								echo	
 								"</td>".
 								"<td><a href=\"\" data-toggle=\"tooltip\" title=\"Python,Java\">$first_name $last_name</a></td>".
+								"<td>$project_name</td>".
 								"<td><span id=\"task-status-$id\" class=\"badge badge-$label\">$task_status</span></td>".
 								"<td>".
 								"<a class=\"edit\" title=\"Edit\" data-toggle=\"modal\" data-target=\"#EditTask\" ".
