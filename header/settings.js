@@ -109,6 +109,7 @@ $('#EditSkill').on('shown.bs.modal', function (e) {
   });
 
   //paginare
+  //pt skill
 $(document).ready(function () {
   let t = document.getElementsByClassName('.skill_item').length;
   $('.skills_management').rpmPagination({
@@ -116,13 +117,28 @@ $(document).ready(function () {
       total: t,
       domElement: '.skill_item'
   });
-
+//pt user
    let t1 = document.getElementsByClassName('.user_item').length;
   $('.user_management').rpmPagination({
      limit: 10,
       total: t1,
       domElement: '.user_item'
   });
+//pt team
+  let t2 = document.getElementsByClassName('.team_item').length;
+  $('.team_management').rpmPagination({
+     limit: 10,
+      total: t2,
+      domElement: '.team_item'
+  });
+//pt project
+  let t3 = document.getElementsByClassName('.project_item').length;
+  $('.project_management').rpmPagination({
+     limit: 10,
+      total: t3,
+      domElement: '.project_item'
+  });
+
     let TabId = window.localStorage.getItem("Taskboard-tab");
     console.log("TabId:"+ TabId);
 
