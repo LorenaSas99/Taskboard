@@ -16,8 +16,15 @@
             $first_name = $row["first_name"];
             $last_name = $row["last_name"];
             $work_hours = $row["work_hours"];
-            $skill_id = $row["skill"];
-            $skill_level_id = $row["skill_level"];
+
+            $sql = "SELECT * FROM $database.UserSkills WHERE userid=$id";
+            $retval1 = mysqli_query( $connection, $sql );
+            $skill_id = 0;
+            $skill_level_id = 0;
+            while($row1 = mysqli_fetch_assoc($retval1)){
+                $skill_id = $row1["skill_id"];
+                $skill_level_id = $row1['skill_level'];
+            }
 
             $sql="SELECT * FROM $database.Skills WHERE id=$skill_id";
             $retval1 = mysqli_query( $connection, $sql );

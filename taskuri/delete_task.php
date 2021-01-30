@@ -3,23 +3,23 @@ $db_hostname="127.0.0.1:3306";
 $db_username="root";
 $db_password="";
 $database="taskboard";
-logger("fa ceva");
+//logger("fa ceva");
 if($_SERVER["REQUEST_METHOD"] == "POST") {
-	logger("POST");
+	//logger("POST");
     $id = $_POST['TaskId'];
     $sql="DELETE FROM $database.Tasks WHERE id='$id'";
 	$connection = mysqli_connect($db_hostname, $db_username, $db_password);
-	logger("delete task: $id");
+	echo "delete task: $id";
 	if(!$connection) {
-		logger("Database Connection Error: ".mysqli_connect_error());
+		echo "Database Connection Error: ".mysqli_connect_error();
 	} else {
 		$retval = mysqli_query( $connection, $sql );
 		if(! $retval ) {
 			
-			logger( "Error access in table Tasks".mysqli_error($connection));
+			echo "Error access in table Tasks".mysqli_error($connection);
 		}
 		else{
-			logger("Task deleted");
+			echo"Task deleted";
 		}
         mysqli_close($connection);
 	}

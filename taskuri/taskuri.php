@@ -54,6 +54,12 @@
 						<th style="width: 5em;">Duration</th>
 						<th style="width: 10em;">Progress</th>
 						<th style="width: 10em;">Assigned to</th>
+						<?php
+
+							if($_SESSION["user_role"] == "Admin"){
+								echo "<th style=\"width: 10em;\">Team</th>";
+							}
+						?>
 						<th style="width: 6em;">Projects</th>
 						<th style="width: 6em;">Status</th>
                         <th style="width: 6em;">Actions</th>
@@ -95,10 +101,12 @@
 							$retval1 = mysqli_query( $connection, $sql );
 							$first_name="";
 							$last_name="";
+							$team_id=0;
+
 							while($row1= mysqli_fetch_assoc($retval1)){
 								$first_name=$row1["first_name"];
 								$last_name=$row1["last_name"];
-
+								$team_id=$row1["team"];
 							}
 							$sql="SELECT * FROM $database.TaskStatus WHERE id=$task_status_id";
 							$retval1 = mysqli_query( $connection, $sql );
@@ -130,6 +138,17 @@
 								}
 								while($row = mysqli_fetch_assoc($retval2)) {
 									$role= $row["role"];
+								}
+							}
+
+							$sql="SELECT * FROM $database.Teams";
+							$retval2 = mysqli_query( $connection, $sql );
+							$team_name= "";
+							while($row2= mysqli_fetch_assoc($retval2)){
+								$id_t=$row2["id"];
+								if($id_t == $team_id){
+									$team_name=$row2["team_name"];
+									
 								}
 							}
 
@@ -165,8 +184,13 @@
 									"</div>";
 								echo	
 								"</td>".
-								"<td><a href=\"\" data-toggle=\"tooltip\" title=\"Python,Java\">$first_name $last_name</a></td>".
-								"<td>$project_name</td>".
+								"<td><a href=\"\" data-toggle=\"tooltip\" title=\"Python,Java\">$first_name $last_name</a></td>";
+								if($_SESSION["user_role"] == "Admin"){
+									echo "<td>$team_name</td>";
+										
+								}
+								
+								echo "<td>$project_name</td>".
 								"<td><span id=\"task-status-$id\" class=\"badge badge-$label\">$task_status</span></td>".
 								"<td>".
 								"<a class=\"edit\" title=\"Edit\" data-toggle=\"modal\" data-target=\"#EditTask\" ".

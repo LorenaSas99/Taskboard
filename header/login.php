@@ -21,12 +21,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 		if($count == 1 ) {
 			$user_id = 0;
 			$email_confirmed= false;
+			$role = "";
 			while($row = mysqli_fetch_assoc($user)) {
 				$user_id = $row["id"];
+				$role = $row["role"];
 				$email_confirmed =$row["email_confirmed"];
 			}
 			if($email_confirmed == true){
 				$_SESSION['user_id'] = $user_id;
+				$_SESSION['user_role'] = $role;
 			// Redirect to Home page
 				header("location: http://localhost/taskboard");
 			}else{

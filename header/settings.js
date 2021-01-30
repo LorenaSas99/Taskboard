@@ -150,8 +150,27 @@ $(document).ready(function () {
     document.getElementsByClassName("tab-pane container")[1].classList.remove("fade");
     document.getElementsByClassName("tab-pane container")[0].classList.add("fade");
     document.getElementsByClassName("tab-pane container")[1].classList.add("active");
+  }else 
+    if(TabId == 3 ){
+    console.log("elm");
+    document.getElementById("user").classList.remove("active");
+    document.getElementById("team").classList.add("active");
+    document.getElementsByClassName("tab-pane container")[0].classList.remove("active");
+    document.getElementsByClassName("tab-pane container")[2].classList.remove("fade");
+    document.getElementsByClassName("tab-pane container")[0].classList.add("fade");
+    document.getElementsByClassName("tab-pane container")[2].classList.add("active");
+    }
+    else
+    if(TabId == 4 ){
+      console.log("elm");
+      document.getElementById("user").classList.remove("active");
+      document.getElementById("project").classList.add("active");
+      document.getElementsByClassName("tab-pane container")[0].classList.remove("active");
+      document.getElementsByClassName("tab-pane container")[3].classList.remove("fade");
+      document.getElementsByClassName("tab-pane container")[0].classList.add("fade");
+      document.getElementsByClassName("tab-pane container")[3].classList.add("active");
+      }
 
-  }
 });
 
 //salvare in local storage

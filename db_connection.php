@@ -191,6 +191,7 @@
 				"task_status INT NOT NULL,".
 				"assigned_member INT NOT NULL,".
 				"project INT NOT NULL,".
+				"elapsed INT NOT NULL,".
 				"CONSTRAINT fk_skill_required FOREIGN KEY (skill_required) REFERENCES Skills(id),".
 				"CONSTRAINT fk_level_required FOREIGN KEY (level_required) REFERENCES SkillLevel(id),".
 				"CONSTRAINT fk_task_status FOREIGN KEY (task_status) REFERENCES TaskStatus(id),".
