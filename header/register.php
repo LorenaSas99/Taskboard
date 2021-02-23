@@ -240,6 +240,7 @@
 				</div>
 			</div>
 
+			<!-- Teams -->
 			<div class="form-group">
 				<div class="input-group">
 					<div class="input-group-prepend">
@@ -265,6 +266,7 @@
 				</div>
 			</div>
 			
+			<!-- Sign Up -->
 			<div class="form-group">
 				<button type="submit" class="btn btn-primary login-btn btn-block">Sign Up</button>
 			</div>

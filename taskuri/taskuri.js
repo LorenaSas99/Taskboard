@@ -4,7 +4,7 @@
       var progressItems = document.getElementsByClassName('progress-bar');
       this.console.log("progressItems: " + progressItems.length);
       // Fetch all the forms we want to apply custom Bootstrap validation styles to
-      var forms = document.getElementsByClassName('TaskForm');
+      var forms = document.getElementsByClassName('TaskForm needs-validation');
       // Loop over them and prevent submission
       var validation = Array.prototype.filter.call(forms, function(form) {
         form.addEventListener('submit', function(event) {
@@ -15,12 +15,18 @@
           var skillLevelEnough = false;
           Http.onreadystatechange = (e) => {
             if(Http.readyState === 4 && Http.status === 200) {
+              console.log(Http.responseText);
               var users = JSON.parse(Http.responseText);
               for (var user of users) {
                 var uiUser = document.getElementById("add_task_user");
                 if (uiUser.value === (user.first_name + " " + user.last_name)) {
                   var skill = document.getElementById("add_task_skill");
                   var skill_level = document.getElementById("add_task_skill_level");
+
+                  if(skill_level.value.localeCompare(user.level) > 0){
+                    document.getElementById("add_task_error").innerHTML = "Task skill level greather than user skill level <br>";
+                  }
+
                   if (skill.value === user.skill &&
                      (skill_level.value.localeCompare(user.level) === -1 || skill_level.value.localeCompare(user.level) === 0)) {
                        skillLevelEnough = true;
@@ -36,12 +42,28 @@
           }
 
           if (form.checkValidity() === false || skillLevelEnough === true) {
+            console.log("form not valid");
             event.preventDefault();
             event.stopPropagation();
+            var inputs = document.getElementsByClassName('form-control');
+            console.log(inputs);
+            for( var i = 0 ; i < inputs.length; i++ ){
+              var input = inputs[i];
+              input.classList.remove('is-invalid')
+              input.classList.remove('is-valid')
+
+              if (input.checkValidity() === false) {
+                  input.classList.add('is-invalid')
+              }
+              else {
+                  input.classList.add('is-valid')
+              }
+            }
+
           } else {
             window.top.location.replace('http://localhost/taskboard/');
           }
-          form.classList.add('was-validated');
+          //form.classList.add('was-validated');
         }, false);
       });
     }, false);

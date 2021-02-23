@@ -2,6 +2,7 @@
 
 $add_task_err = "";
 if($_SERVER["REQUEST_METHOD"] == "POST") {
+	logger("Addtask -");
 	$task_name = $_POST['TaskName'];
 	$skill = $_POST['Skill'];
 	$skill_level = $_POST['SkillLevel'];
@@ -21,12 +22,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	$connection = mysqli_connect($db_hostname, $db_username, $db_password);
 	if(!$connection) {
-		echo"Database Connection Error...".mysqli_connect_error();
+		logger("AddTask - Database Connection Error...".mysqli_connect_error());
 	} else {
 		$sql="SELECT * FROM $database.Skills WHERE skill='$skill'";
 		$retval = mysqli_query( $connection, $sql );
 		if(! $retval ) {
-			echo "Error access in table Skills".mysqli_error($connection);
+			logger( "AddTask - Error access in table Skills: ".mysqli_error($connection));
 		}
 		if (mysqli_num_rows($retval) == 1) {
 			while($row = mysqli_fetch_assoc($retval)) {
@@ -37,7 +38,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 		$sql="SELECT * FROM $database.SkillLevel WHERE skill_level='$skill_level'";
 		$retval = mysqli_query( $connection, $sql );
 		if(! $retval ) {
-			echo "Error access in table SkillLevel".mysqli_error($connection);
+			logger("AddTask - Error access in table SkillLevel: ".mysqli_error($connection));
 		}
 		if (mysqli_num_rows($retval) == 1) {
 			while($row = mysqli_fetch_assoc($retval)) {
@@ -51,7 +52,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 		$sql = "SELECT * FROM $database.TeamMembers WHERE first_name='$first_name' AND last_name='$last_name'";
 		$retval = mysqli_query( $connection, $sql );
 		if(! $retval ) {
-			echo "Error access in table TeamMembers".mysqli_error($connection);
+			logger("AddTask - Error access in table TeamMembers: ".mysqli_error($connection));
 		}
 		if (mysqli_num_rows($retval) == 1) {
 			while($row = mysqli_fetch_assoc($retval)) {
@@ -63,7 +64,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 			$sql="SELECT * FROM $database.TaskStatus WHERE task_status='$status'";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
-				echo "Error access in table TaskStatus".mysqli_error($connection);
+				logger("AddTask - Error access in table TaskStatus: ".mysqli_error($connection));
 			}
 			if (mysqli_num_rows($retval) == 1) {
 				while($row = mysqli_fetch_assoc($retval)) {
@@ -74,9 +75,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 			$sql="SELECT * FROM $database.Projects WHERE nume='$project_name'";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
-				echo "Error access in table Projects".mysqli_error($connection);
+				logger("AddTask - Error access in table Projects: ".mysqli_error($connection));
 			}
-			logger("nume proj".mysqli_num_rows($retval)."nume: $project_name");
 			
 			if (mysqli_num_rows($retval) == 1) {
 				while($row = mysqli_fetch_assoc($retval)) {
@@ -84,11 +84,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 				}
 			}
 			
-			$sql = "INSERT INTO Taskboard.Tasks(task_name,skill_required,level_required,duration,task_status,assigned_member,project,elapsed) ".
-					"VALUES('$task_name',$skill_id,$level_id,$duration,$status_id,$user_id, $project_id, 0)";
+			$sql = "INSERT INTO Taskboard.Tasks(task_name,skill_required,level_required,duration,task_status,assigned_member,project) ".
+					"VALUES('$task_name',$skill_id,$level_id,$duration,$status_id,$user_id, $project_id)";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
-				echo"Error access in table TeamMembers".mysqli_error($connection);
+				logger("AddTask - Error access in table Tasks: ".mysqli_error($connection));
 			}
 		//}
 		
@@ -107,13 +107,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         </button>
       </div>
       <div class="modal-body">
-	  <form method="post" class="TaskForm" action="" novalidate>
+	  <form method="post" class="TaskForm needs-validation" action="" novalidate>
 			<div class="form-group">
 				<div class="input-group">
 					<span class="input-group-addon">
 						<span style="display: inline-block; width: 10em; text-align: left;"> <i class="fa fa-list"></i> Task name</span>
 					</span>
 					<input type="text" class="form-control" name="TaskName" placeholder="Task name" required>
+					<div class="valid-feedback">
+        				Looks good!
+      				</div>
+					<div class="invalid-feedback">
+        				The field is required ! 
+      				</div>
 				</div>
 			</div>
 			<div class="form-group">
