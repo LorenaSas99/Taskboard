@@ -16,14 +16,14 @@
     if(!$connection) {
         logger2(" user - Database Connection Error: ".mysqli_connect_error());
     } else {
+        logger2("user- users.php");
         $sql="SELECT * FROM $database.TeamMembers";
         $retval = mysqli_query( $connection, $sql );
         if(! $retval){
             logger2("user - Error in access table TeamMembers: ".mysqli_error($connection));
         }
         $users = [];
-        $skill = array();
-        
+
         while($row = mysqli_fetch_assoc($retval)) {
             $first_name = $row["first_name"];
             $last_name = $row["last_name"];
@@ -37,19 +37,21 @@
             }
             $skill_id = 0;
             $skill_level_id = 0;
+            $skill = array();
+            
             while($row1 = mysqli_fetch_assoc($retval1)){
                 $skill_id = $row1["skill_id"];
                 $skill_level_id = $row1['skill_level'];
+                $sql="SELECT * FROM $database.Skills WHERE id=$skill_id";
+                $retval2 = mysqli_query( $connection, $sql );
+                if(! $retval2){
+                    logger2("user - Error in access table Skills: ".mysqli_error($connection));
+            }else{
+                while($row2 = mysqli_fetch_assoc($retval2)){
+                    array_push($skill, $row2["skill"]);
+                    logger2("user - all skills: ".$row2["skill"]);
+                }
             }
-
-            $sql="SELECT * FROM $database.Skills WHERE id=$skill_id";
-            $retval1 = mysqli_query( $connection, $sql );
-            if(! $retval1){
-                logger2("user - Error in access table Skills: ".mysqli_error($connection));
-            }
-            
-            while($row1 = mysqli_fetch_assoc($retval1)){
-                array_push($skill, $row1["skill"]);
             }
 
             $sql = "SELECT * FROM $database.SkillLevel WHERE id=$skill_level_id";

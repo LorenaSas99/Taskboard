@@ -16,26 +16,34 @@
           Http.onreadystatechange = (e) => {
             if(Http.readyState === 4 && Http.status === 200) {
               console.log(Http.responseText);
-              var users = JSON.parse(Http.responseText);
+              var users = JSON.parse(Http.responseText); //luam din bd
+              //iteram pe users din bd
               for (var user of users) {
                 var uiUser = document.getElementById("add_task_user");
+                //ma opresc la user selectat pe interf
                 if (uiUser.value === (user.first_name + " " + user.last_name)) {
-                  var skill = document.getElementById("add_task_skill");
-                  var skill_level = document.getElementById("add_task_skill_level");
+                  var skill = document.getElementById("add_task_skill").value;
+                  var skill_level = document.getElementById("add_task_skill_level").value;
+                  var found = false;
 
-                  if(skill_level.value.localeCompare(user.level) > 0){
-                    document.getElementById("add_task_error").innerHTML = "Task skill level greather than user skill level <br>";
+                  for(var user_skill of user.skill){
+                    if(user_skill.toLowerCase().includes(skill.toLowerCase())){
+                      found = true;
+                      break;
+                    }
                   }
-
-                  if (skill.value === user.skill &&
-                     (skill_level.value.localeCompare(user.level) === -1 || skill_level.value.localeCompare(user.level) === 0)) {
-                       skillLevelEnough = true;
-                       document.getElementById("add_task_error").innerHTML = "";
-                  } else {
-                    // Skill & level not enough
-                    document.getElementById("add_task_error").innerHTML = "User not matched for the task. The skill and/or skill level is different than that required by the task!";
+                  if(!found){
+                    document.getElementById("add_task_error").innerHTML = "The user selected does not have the selected task skill(user skills:" + user.skill + ") <br> ";
                     skillLevelEnough = false;
+                  }else{
+                    console.log(skill_level.localeCompare(user.level));
+                    if(skill_level.localeCompare(user.level) === 1){
+                      document.getElementById("add_task_error").innerHTML = "Task skill level greather than user skill level(" + user.level + " )<br>";
+                      skillLevelEnough= false;
+                    
+                    }
                   }
+                  
                 }
               }
             }
