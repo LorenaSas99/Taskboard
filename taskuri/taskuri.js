@@ -10,9 +10,10 @@
         form.addEventListener('submit', function(event) {
           const Http = new XMLHttpRequest();
           const url='http://localhost/taskboard/header/users.php';
-          Http.open("POST", url);
+          Http.open("GET", url);
           Http.send();
           var skillLevelEnough = false;
+          var ready = false;
           Http.onreadystatechange = (e) => {
             if(Http.readyState === 4 && Http.status === 200) {
               console.log(Http.responseText);
@@ -35,11 +36,14 @@
                   if(!found){
                     document.getElementById("add_task_error").innerHTML = "The user selected does not have the selected task skill(user skills:" + user.skill + ") <br> ";
                     skillLevelEnough = false;
+                    ready = true;
                   }else{
                     console.log(skill_level.localeCompare(user.level));
+                    var c= skill_level.localeCompare(user.level)
                     if(skill_level.localeCompare(user.level) === 1){
                       document.getElementById("add_task_error").innerHTML = "Task skill level greather than user skill level(" + user.level + " )<br>";
                       skillLevelEnough= false;
+                      ready = true;
                     
                     }
                   }
@@ -48,7 +52,9 @@
               }
             }
           }
-
+          while(! ready){
+            
+          }
           if (form.checkValidity() === false || skillLevelEnough === true) {
             console.log("form not valid");
             event.preventDefault();
@@ -69,7 +75,7 @@
             }
 
           } else {
-            window.top.location.replace('http://localhost/taskboard/');
+            //window.top.location.replace('http://localhost/taskboard/');
           }
           //form.classList.add('was-validated');
         }, false);

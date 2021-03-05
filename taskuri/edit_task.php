@@ -51,12 +51,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	$project_id = 0;
 
 	if(!$connection) {
-		logger2("Database Connection Error...".mysqli_connect_error());
+		logger2("edit Database Connection Error...".mysqli_connect_error());
 	} else {
+		logger2("edit success");
 		$sql="SELECT * FROM $database.TaskStatus WHERE task_status='$status'";
 		$retval = mysqli_query( $connection, $sql );
 		if(! $retval ) {
-			logger2("Error access in table TaskStatus".mysqli_error($connection));
+			logger2("edit Error access in table TaskStatus".mysqli_error($connection));
 		}
 		if (mysqli_num_rows($retval) == 1) {
 			while($row = mysqli_fetch_assoc($retval)) {
@@ -67,39 +68,39 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		$sql="SELECT * FROM $database.Projects WHERE nume='$project_name'";
 		$retval = mysqli_query( $connection, $sql );
 		if(! $retval ) {
-			logger2("Error access in table Projects".mysqli_error($connection));
+			logger2("edit Error access in table Projects".mysqli_error($connection));
 		}
 		if (mysqli_num_rows($retval) == 1) {
 			while($row = mysqli_fetch_assoc($retval)) {
 				$project_id = $row["id"];
-				logger2("id project: $project_id");
+				logger2("edit id project: $project_id");
 			}
 		}
 
 		logger2("status id: $status_id");
 
 		if ($role == 'Admin') {
-			logger2("skill: $skill" );
+			logger2("edit skill: $skill" );
 			$sql="SELECT * FROM $database.Skills WHERE skill='$skill'";
-			logger2("sql: $sql");
+			logger2("edit sql: $sql");
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
-				logger2( "Error access in table Skills".mysqli_error($connection));
+				logger2( "edit Error access in table Skills".mysqli_error($connection));
 			}
 			$cnt= mysqli_num_rows($retval);
-			logger2("Rezultate la select skills: $cnt");
+			logger2("edit Rezultate la select skills: $cnt");
 
 			if (mysqli_num_rows($retval) == 1) {
 				while($row = mysqli_fetch_assoc($retval)) {
 					$skill_id = $row["id"];
 				}
 			}
-		logger2("skill id: $skill_id");
+		logger2("edit skill id: $skill_id");
 
 			$sql="SELECT * FROM $database.SkillLevel WHERE skill_level='$skill_level'";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
-				logger2("Error access in table SkillLevel".mysqli_error($connection));
+				logger2("edit Error access in table SkillLevel".mysqli_error($connection));
 			}
 			if (mysqli_num_rows($retval) == 1) {
 				while($row = mysqli_fetch_assoc($retval)) {
@@ -112,7 +113,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 			$sql = "SELECT * FROM $database.TeamMembers WHERE first_name='$first_name' AND last_name='$last_name'";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
-				logger2( "Error access in table TeamMembers".mysqli_error($connection));
+				logger2( "edit Error1 access in table TeamMembers".mysqli_error($connection));
 			}
 			if (mysqli_num_rows($retval) == 1) {
 				while($row = mysqli_fetch_assoc($retval)) {
@@ -121,18 +122,18 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 			}
 			$sql = "UPDATE Taskboard.Tasks SET task_name='$task_name',skill_required=$skill_id,level_required=$level_id,duration=$duration,".
 					"task_status=$status_id,assigned_member=$user_id,project=$project_id WHERE id=$id";
-			logger2("modific: $sql");
+			logger2("edit modific: $sql");
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
-				logger2("Error access in table TeamMembers".mysqli_error($connection));
+				logger2("edit Error2 access in table TeamMembers".mysqli_error($connection));
 			}else{
-				logger2("task editing");
+				logger2("edit task editing");
 			}
 		} else {
 			$sql = "UPDATE Taskboard.Tasks SET duration=$duration,task_status=$status_id WHERE id=$id";
 			$retval = mysqli_query( $connection, $sql );
 			if(! $retval ) {
-				logger2("Error access in table TeamMembers".mysqli_error($connection));
+				logger2("edit Error3 access in table TeamMembers".mysqli_error($connection));
 			}
 		}
         mysqli_close($connection);
@@ -151,7 +152,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
         </button>
       </div>
       <div class="modal-body">
-	  <form method="post" class="TaskForm" action="edit_task.php" novalidate>
+	  <form method="post" class="TaskForm needs-validation" action="edit_task.php" novalidate>
 			<div class="form-group">
 				<div class="input-group">
 					<span class="input-group-addon">
@@ -160,7 +161,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 					<?php
 							$connection = mysqli_connect($db_hostname, $db_username, $db_password);
 							if(!$connection) {
-								echo "Database Connection Error...".mysqli_connect_error();
+								logger2( "edit Database Connection Error1...".mysqli_connect_error());
 							} else {
 							
 							if (isset($_SESSION['user_id'])) {
@@ -169,7 +170,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 								$retval = mysqli_query( $connection, $sql );
 								while($row = mysqli_fetch_assoc($retval)) {
 									$role=$row["role"];
-									logger("rol: $role");
+									logger2("edit rol: $role");
 
 									if($role == 'Operator'){
 									echo "<input type=\"text\" id=\"edit-task-name\" class=\"form-control\" name=\"EditTaskName\" placeholder=\"Task name\" required disabled>";
@@ -181,6 +182,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 							}
 							}
 						?>
+						<div class="valid-feedback">
+        					Looks good!
+      					</div>
+						<div class="invalid-feedback">
+        					The field is required ! 
+      					</div>
 				</div>
 			</div>
 			<div class="form-group">
@@ -192,7 +199,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 					<?php
 							$connection = mysqli_connect($db_hostname, $db_username, $db_password);
 							if(!$connection) {
-								echo "Database Connection Error...".mysqli_connect_error();
+								logger2( "edit Database Connection Error1...".mysqli_connect_error());
 							} else {
 								$sql="SELECT * FROM $database.Skills";
 								$retval = mysqli_query( $connection, $sql );
@@ -214,7 +221,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 					<?php
 							$connection = mysqli_connect($db_hostname, $db_username, $db_password);
 							if(!$connection) {
-								echo "Database Connection Error...".mysqli_connect_error();
+								logger2( "edit Database Connection Error1...".mysqli_connect_error());
 							} else {
 							
 							if (isset($_SESSION['user_id'])) {
@@ -225,9 +232,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 									$role=$row["role"];
 									
 									if($role == 'Operator'){
-									echo "<select id=\"edit-level\" class=\"form-control\" name=\"EditSkillLevel\" disabled>";
+										echo "<select id=\"edit-level\" class=\"form-control\" name=\"EditSkillLevel\" disabled>";
 									}else{
-										echo "<select id=\"edit-level\" class=\"form-control\" name=\"EditSkillLevel\">";
+										echo"<select id=\"edit-level\" class=\"form-control\" name=\"EditSkillLevel\">";
 									}
 								}
 								mysqli_close($connection);
@@ -254,6 +261,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 						<span style="display: inline-block; width: 10em; text-align: left;"> <i class="fa fa-clock-o"></i> Duration</span>
 					</span>
 					<input type="number" id="edit-duration" class="form-control" name="EditDuration" placeholder="Duration" min="0" max="1000" required>
+					<div class="valid-feedback">
+        				Looks good!
+      				</div>
+					<div class="invalid-feedback">
+        				The field is required ! 
+      				</div>
 				</div>
 			</div>
 			<div class="form-group">
@@ -266,7 +279,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 						<?php
 							$connection = mysqli_connect($db_hostname, $db_username, $db_password);
 							if(!$connection) {
-								echo "Database Connection Error...".mysqli_connect_error();
+								logger2( "edit Database Connection Error1...".mysqli_connect_error());
 							} else {
 								$sql="SELECT * FROM $database.TeamMembers";
 								$retval = mysqli_query( $connection, $sql );
@@ -304,7 +317,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 					<?php
 							$connection = mysqli_connect($db_hostname, $db_username, $db_password);
 							if(!$connection) {
-								echo"Database Connection Error...".mysqli_connect_error();
+								logger2("edit Database Connection Error1...".mysqli_connect_error());
 							} else {
 								$sql="SELECT * FROM $database.Projects";
 								$retval = mysqli_query( $connection, $sql );

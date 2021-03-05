@@ -170,6 +170,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 						<span style="display: inline-block; width: 10em; text-align: left;"> <i class="fa fa-clock-o"></i> Duration</span>
 					</span>
 					<input type="number" class="form-control" name="Duration" placeholder="Duration" min="0" max="1000" required>
+					<div class="valid-feedback">
+        				Looks good!
+      				</div>
+					<div class="invalid-feedback">
+        				The field is required ! 
+      				</div>
 				</div>
 			</div>
 			<div class="form-group">
